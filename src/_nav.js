@@ -2,6 +2,7 @@ import React from 'react'
 import CIcon from '@coreui/icons-react'
 import {
   cilBell,
+  cilBug,
   cilCalculator,
   cilChartPie,
   cilCursor,
@@ -41,6 +42,20 @@ const _nav = [
     name: 'Typography',
     to: '/theme/typography',
     icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavTitle,
+    name: 'Master Data',
+  },
+  {
+    component: CNavTitle,
+    name: 'Pengaturan',
+  },
+  {
+    component: CNavItem,
+    name: 'Sys Config',
+    to: '/backend/sy-config-main',
+    icon: <CIcon icon={cilBug} customClassName="nav-icon" />,
   },
   {
     component: CNavTitle,
