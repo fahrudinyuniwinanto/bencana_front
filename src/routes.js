@@ -52,6 +52,8 @@ const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 
 // Bencana
 const SyConfig = React.lazy(() => import('./views/backend/syconfig/SyConfigMain'))
+const SyConfigList = React.lazy(() => import('./views/backend/syconfig/SyConfigList'))
+const SyConfigFrm = React.lazy(() => import('./views/backend/syconfig/SyConfigFrm'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -99,6 +101,8 @@ const routes = [
   { path: '/notifications/toasts', name: 'Toasts', element: Toasts },
   { path: '/widgets', name: 'Widgets', element: Widgets },
   { path: '/backend/sy-config-main', name: 'SyConfig', element: SyConfig },
+  { path: '/backend/sy-config-list', name: 'SyConfig List', element: SyConfigList },
+  { path: '/backend/sy-config-frm', name: 'SyConfig Form', element: SyConfigFrm },
 ]
 
 export default routes

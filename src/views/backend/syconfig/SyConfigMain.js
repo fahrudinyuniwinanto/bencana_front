@@ -1,19 +1,22 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import SyConfigList from './SyConfigList' // Pastikan import komponen getList yang sudah dibuat
+import { CButton } from '@coreui/react'
 
 const MainComponent = () => {
   const navigate = useNavigate()
 
   const handleNewForm = () => {
-    navigate('/backend/syconfig/SyConfigFrm')
+    navigate('/backend/sy-config-frm')
   }
 
   return (
     <div>
-      <h1>Main Component</h1>
+      <h1>System Configuration</h1>
+      <CButton color="primary" onClick={handleNewForm}>
+        Tambah
+      </CButton>
       <SyConfigList />
-      <button onClick={handleNewForm}>Tambah</button>
     </div>
   )
 }
