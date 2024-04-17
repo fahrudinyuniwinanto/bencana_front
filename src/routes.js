@@ -51,7 +51,6 @@ const Toasts = React.lazy(() => import('./views/notifications/toasts/Toasts'))
 const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 
 // Bencana
-const SyConfig = React.lazy(() => import('./views/backend/syconfig/SyConfigMain'))
 const SyConfigList = React.lazy(() => import('./views/backend/syconfig/SyConfigList'))
 const SyConfigFrm = React.lazy(() => import('./views/backend/syconfig/SyConfigFrm'))
 
@@ -100,9 +99,9 @@ const routes = [
   { path: '/notifications/modals', name: 'Modals', element: Modals },
   { path: '/notifications/toasts', name: 'Toasts', element: Toasts },
   { path: '/widgets', name: 'Widgets', element: Widgets },
-  { path: '/backend/sy-config-main', name: 'SyConfig', element: SyConfig },
   { path: '/backend/sy-config-list', name: 'SyConfig List', element: SyConfigList },
-  { path: '/backend/sy-config-frm', name: 'SyConfig Form', element: SyConfigFrm },
+  { path: '/backend/sy-config-frm/', name: 'SyConfig Form', element: SyConfigFrm },
+  { path: '/backend/sy-config-frm/:id', name: 'SyConfig Form', element: SyConfigFrm },
 ]
 
 export default routes

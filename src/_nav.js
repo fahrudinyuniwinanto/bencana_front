@@ -54,7 +54,7 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Sys Config',
-    to: '/backend/sy-config-main',
+    to: '/backend/sy-config-list',
     icon: <CIcon icon={cilBug} customClassName="nav-icon" />,
   },
   {

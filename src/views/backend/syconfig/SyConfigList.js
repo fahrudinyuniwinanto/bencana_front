@@ -1,26 +1,30 @@
 import React, { useState, useEffect } from 'react'
-import { CTable, CForm, CFormInput, CInputGroup, CButton } from '@coreui/react'
+import { useNavigate } from 'react-router-dom'
+import { CTable, CForm, CFormInput, CInputGroup, CButton, CSpinner } from '@coreui/react'
 
-const getList = () => {
+const SyConfigFrm = () => {
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
+  const [currentPage, setCurrentPage] = useState(1)
+  const [total, setTotal] = useState(0)
 
   useEffect(() => {
-    fetchData()
-  }, [searchQuery])
+    getList()
+  }, [searchQuery, currentPage])
 
-  const fetchData = async () => {
+  const getList = async () => {
     try {
       const q = searchQuery || '' // Gunakan searchQuery jika tidak kosong, jika tidak kosong, gunakan string kosong
-      const page = '1'
-      const limit = '100'
+      const page = currentPage
+      const limit = '10'
 
       const response = await fetch(
         `http://bencana_back.me/apisyconfig/getlist?q=${q}&page=${page}&limit=${limit}`,
       )
       const responseData = await response.json()
       setData(responseData.data)
+      setTotal(Math.ceil(responseData.total / limit))
       setLoading(false)
     } catch (error) {
       console.error(error)
@@ -29,28 +33,48 @@ const getList = () => {
   }
 
   const handleSearch = () => {
-    fetchData()
+    setCurrentPage(1)
+    getList()
+  }
+
+  const navigate = useNavigate()
+  const newFrm = () => {
+    navigate('/backend/sy-config-frm')
   }
 
   if (loading) {
-    return <div>Loading...</div>
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+        <CSpinner color="primary" size="sm" />
+      </div>
+    )
   }
 
   return (
     <div>
-      <CForm className="mb-3 col-md-4">
-        <CInputGroup className="mb-3">
-          <CFormInput
-            type="text"
-            placeholder="Search..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <CButton color="primary" onClick={handleSearch}>
-            Search
+      <h1>Sy Config List</h1>
+      <hr />
+      <div className="row">
+        <div className="mb-2 col-md-5">
+          <CButton color="primary" onClick={newFrm}>
+            Tambah
           </CButton>
-        </CInputGroup>
-      </CForm>
+        </div>
+        <div className="mb-2 col-md-3"></div>
+        <CForm className="mb-2 col-md-4">
+          <CInputGroup className="mb-3">
+            <CFormInput
+              type="text"
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <CButton color="primary" onClick={handleSearch}>
+              Search
+            </CButton>
+          </CInputGroup>
+        </CForm>
+      </div>
       <CTable hover responsive>
         <thead>
           <tr>
@@ -63,7 +87,11 @@ const getList = () => {
         </thead>
         <tbody>
           {data.map((item, index) => (
-            <tr key={index}>
+            <tr
+              key={index}
+              className="cursor-pointer"
+              onClick={() => navigate(`/backend/sy-config-frm/${item.id}`)}
+            >
               <td>{index + 1}</td>
               <td>{item.conf_name}</td>
               <td>{item.conf_val}</td>
@@ -73,8 +101,19 @@ const getList = () => {
           ))}
         </tbody>
       </CTable>
+      <nav aria-label="Page navigation">
+        <ul className="pagination justify-content-end">
+          {Array.from({ length: total }, (_, i) => i + 1).map((page) => (
+            <li key={page} className={`page-item ${page === currentPage ? 'active' : ''}`}>
+              <button className="page-link" onClick={() => setCurrentPage(page)}>
+                {page}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </nav>
     </div>
   )
 }
 
-export default getList
+export default SyConfigFrm
