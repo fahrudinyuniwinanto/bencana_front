@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { CForm, CButton, CFormInput, CFormTextarea } from '@coreui/react'
+import Swal from 'sweetalert2'
 import { BASE_URL } from '../../../wfConfig'
 
 const SyConfigFrm = () => {
@@ -65,16 +66,43 @@ const SyConfigFrm = () => {
 
   const del = async () => {
     try {
-      const response = await fetch(`${BASE_URL}apisyconfig/del/${id}`)
-      if (!response.ok) {
-        throw new Error('Failed to delete data')
+      // Tampilkan SweetAlert konfirmasi sebelum menghapus
+      const result = await Swal.fire({
+        title: 'Yakin hapus?',
+        text: 'Anda akan menghapus data ID '+id,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, tetap hapus!',
+        cancelButtonText: 'Cancel',
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+      })
+
+      // Jika pengguna menekan tombol "Yes"
+      if (result.isConfirmed) {
+        const response = await fetch(`http://bencana_back.me/apisyconfig/del/${id}`)
+        if (!response.ok) {
+          throw new Error('Failed to delete data')
+        }
+        // Tampilkan SweetAlert saat berhasil menghapus
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Data has been deleted successfully!',
+        }).then(() => {
+          navigate('/backend/sy-config-list')
+        })
       }
-      navigate('/backend/sy-config-list')
     } catch (error) {
       console.error(error)
+      // Tampilkan SweetAlert saat gagal menghapus
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Failed to delete data!',
+      })
     }
   }
-
   const goBack = () => {
     navigate('/backend/sy-config-list')
   }
