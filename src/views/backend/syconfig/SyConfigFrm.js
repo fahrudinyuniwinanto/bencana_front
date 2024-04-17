@@ -11,6 +11,7 @@ const SyConfigFrm = () => {
   const { id } = useParams()
   const navigate = useNavigate()
 
+  //constructtor
   useEffect(() => {
     if (id) {
       read(id)
