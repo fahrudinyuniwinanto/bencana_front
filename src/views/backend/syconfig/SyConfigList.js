@@ -53,7 +53,7 @@ const SyConfigFrm = () => {
 
   return (
     <div>
-      <h1>Sy Config List</h1>
+      <h1>List Konfigurasi Sistem</h1>
       <hr />
       <div className="row">
         <div className="mb-2 col-md-5">

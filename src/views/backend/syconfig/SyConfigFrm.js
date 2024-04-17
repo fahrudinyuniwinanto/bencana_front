@@ -110,7 +110,7 @@ const SyConfigFrm = () => {
 
   return (
     <>
-      <h1>{id ? 'Update' : 'Tambah'} Sy Config Form</h1>
+      <h1>{id ? 'Update' : 'Tambah'} Data Konfigurasi Sistem</h1>
       <hr />
       <div className="row">
         <div className="col-lg-3"></div>
@@ -135,6 +135,7 @@ const SyConfigFrm = () => {
           onChange={(e) => setConfName(e.target.value)}
           placeholder=""
           aria-describedby="exampleFormControlInputHelpInline"
+          required
         />
         <CFormInput
           type="text"
@@ -144,6 +145,7 @@ const SyConfigFrm = () => {
           onChange={(e) => setConfVal(e.target.value)}
           placeholder=""
           aria-describedby="exampleFormControlInputHelpInline"
+          required
         />
         <CFormTextarea
           type="text"
