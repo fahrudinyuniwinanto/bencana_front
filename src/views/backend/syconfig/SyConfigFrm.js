@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { CForm, CButton, CFormInput, CFormTextarea } from '@coreui/react'
+import { BASE_URL } from '../../../wfConfig'
 
 const SyConfigFrm = () => {
   const [confName, setConfName] = useState('')
@@ -29,7 +30,7 @@ const SyConfigFrm = () => {
       },
     }
     try {
-      const response = await fetch('http://bencana_back.me/apisyconfig/save', {
+      const response = await fetch(`${BASE_URL}/apisyconfig/save`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -49,7 +50,7 @@ const SyConfigFrm = () => {
   const read = async (id) => {
     console.log(id)
     try {
-      const response = await fetch(`http://bencana_back.me/apisyconfig/read/${id}`)
+      const response = await fetch(`${BASE_URL}apisyconfig/read/${id}`)
       if (!response.ok) {
         throw new Error('Failed to fetch data')
       }
@@ -64,7 +65,7 @@ const SyConfigFrm = () => {
 
   const del = async () => {
     try {
-      const response = await fetch(`http://bencana_back.me/apisyconfig/del/${id}`)
+      const response = await fetch(`${BASE_URL}apisyconfig/del/${id}`)
       if (!response.ok) {
         throw new Error('Failed to delete data')
       }
@@ -124,17 +125,16 @@ const SyConfigFrm = () => {
           placeholder=""
           aria-describedby="exampleFormControlInputHelpInline"
         />
-        <div className="mt-3">
-          <CButton color="secondary" onClick={goBack}>
-            Kembali
-          </CButton>
-          <button type="submit" className="btn btn-primary">
-            Simpan
-          </button>
-          <CButton color="danger" onClick={del} hidden={id ? false : true}>
-            Hapus
-          </CButton>
-        </div>
+        <br />
+        <CButton className="m-1" color="secondary" onClick={goBack}>
+          Kembali
+        </CButton>
+        <button type="submit" className="btn btn-primary m-1">
+          Simpan
+        </button>
+        <CButton color="danger" className="m-1" onClick={del} hidden={id ? false : true}>
+          Hapus
+        </CButton>
       </CForm>
     </>
   )

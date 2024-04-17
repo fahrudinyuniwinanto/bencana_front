@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CTable, CForm, CFormInput, CInputGroup, CButton, CSpinner } from '@coreui/react'
+import { BASE_URL } from '../../../wfConfig'
 
 const SyConfigFrm = () => {
   const [data, setData] = useState([])
@@ -20,7 +21,7 @@ const SyConfigFrm = () => {
       const limit = '10'
 
       const response = await fetch(
-        `http://bencana_back.me/apisyconfig/getlist?q=${q}&page=${page}&limit=${limit}`,
+        `${BASE_URL}/apisyconfig/getlist?q=${q}&page=${page}&limit=${limit}`,
       )
       const responseData = await response.json()
       setData(responseData.data)
