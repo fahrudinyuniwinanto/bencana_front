@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { CForm, CButton, CFormInput, CFormTextarea } from '@coreui/react'
 import Swal from 'sweetalert2'
-import { BASE_URL } from '../../../wfConfig'
+import { API_BASE_URL } from '../../../wfHelper'
 
 const SyConfigFrm = () => {
   const [confName, setConfName] = useState('')
@@ -32,7 +32,7 @@ const SyConfigFrm = () => {
       },
     }
     try {
-      const response = await fetch(`${BASE_URL}/apisyconfig/save`, {
+      const response = await fetch(`${API_BASE_URL}/sy_config/save`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ const SyConfigFrm = () => {
   const read = async (id) => {
     console.log(id)
     try {
-      const response = await fetch(`${BASE_URL}apisyconfig/read/${id}`)
+      const response = await fetch(`${API_BASE_URL}sy_config/read/${id}`)
       if (!response.ok) {
         throw new Error('Failed to fetch data')
       }
@@ -81,7 +81,7 @@ const SyConfigFrm = () => {
 
       // Jika pengguna menekan tombol "Yes"
       if (result.isConfirmed) {
-        const response = await fetch(`http://bencana_back.me/apisyconfig/del/${id}`)
+        const response = await fetch(`${API_BASE_URL}sy_config/del/${id}`)
         if (!response.ok) {
           throw new Error('Failed to delete data')
         }
