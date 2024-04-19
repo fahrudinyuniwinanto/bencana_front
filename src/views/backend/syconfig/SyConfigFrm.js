@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { CForm, CButton, CFormInput, CFormTextarea } from '@coreui/react'
+import { Dropzone, FileMosaic } from '@dropzone-ui/react'
 import Swal from 'sweetalert2'
 import { API_BASE_URL } from '../../../wfHelper'
 
@@ -8,8 +9,9 @@ const SyConfigFrm = () => {
   const [confName, setConfName] = useState('')
   const [confVal, setConfVal] = useState('')
   const [note, setNote] = useState('')
-  const { id } = useParams()
+  const { id, setId } = useParams()
   const navigate = useNavigate()
+  const [files, setFiles] = React.useState([])
 
   //constructtor
   useEffect(() => {
@@ -18,6 +20,33 @@ const SyConfigFrm = () => {
     }
   }, [id])
 
+  const updateFiles = (incomingFiles) => {
+    console.log(incomingFiles)
+    setFiles(incomingFiles)
+    sendFilesToBackend(incomingFiles)
+  }
+
+  const sendFilesToBackend = async (files) => {
+    try {
+      const formData = new FormData()
+      files.forEach((file, index) => {
+        console.log(`File ${index + 1}:`, file)
+        formData.append('files[]', file)
+      })
+
+      const response = await fetch(`${API_BASE_URL}sy_config/uploadfiles`, {
+        method: 'POST',
+        body: formData,
+        headers: {},
+      })
+      if (!response.ok) {
+        throw new Error('Failed to upload files')
+      }
+      console.log('Files uploaded successfully')
+    } catch (error) {
+      console.error('Error:', error.message)
+    }
+  }
   const save = async (e) => {
     e.preventDefault()
     const data = {
@@ -32,11 +61,8 @@ const SyConfigFrm = () => {
       },
     }
     try {
-      const response = await fetch(`${API_BASE_URL}/sy_config/save`, {
+      const response = await fetch(`${API_BASE_URL}sy_config/save`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify(data),
       })
       if (!response.ok) {
@@ -70,7 +96,7 @@ const SyConfigFrm = () => {
       // Tampilkan SweetAlert konfirmasi sebelum menghapus
       const result = await Swal.fire({
         title: 'Yakin hapus?',
-        text: 'Anda akan menghapus data ID '+id,
+        text: 'Anda akan menghapus data ID ' + id,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Ya, tetap hapus!',
@@ -115,56 +141,68 @@ const SyConfigFrm = () => {
       <div className="row">
         <div className="col-lg-3"></div>
       </div>
-      <CForm className="col-lg-4" onSubmit={save}>
+
+      <CForm onSubmit={save}>
         {/* input id readonly */}
-        <CFormInput
-          type="text"
-          id="i"
-          label="ID"
-          value={id}
-          onChange={(e) => setId(e.target.value)}
-          placeholder=""
-          aria-describedby="exampleFormControlInputHelpInline"
-          readOnly
-        />
-        <CFormInput
-          type="text"
-          id="conf_name"
-          label="Nama Config"
-          value={confName}
-          onChange={(e) => setConfName(e.target.value)}
-          placeholder=""
-          aria-describedby="exampleFormControlInputHelpInline"
-          required
-        />
-        <CFormInput
-          type="text"
-          id="conf_val"
-          label="Value Config"
-          value={confVal}
-          onChange={(e) => setConfVal(e.target.value)}
-          placeholder=""
-          aria-describedby="exampleFormControlInputHelpInline"
-          required
-        />
-        <CFormTextarea
-          type="text"
-          id="note"
-          label="Keterangan"
-          value={note}
-          onChange={(e) => setNote(e.target.value)}
-          placeholder=""
-          aria-describedby="exampleFormControlInputHelpInline"
-        />
+        <div className="row">
+          <div className="col-md-4">
+            <CFormInput
+              type="text"
+              id="i"
+              label="ID"
+              value={id}
+              onChange={(e) => setId(e.target.value)}
+              placeholder=""
+              aria-describedby="exampleFormControlInputHelpInline"
+              readOnly
+            />
+            <CFormInput
+              type="text"
+              id="conf_name"
+              label="Nama Config"
+              value={confName}
+              onChange={(e) => setConfName(e.target.value)}
+              placeholder=""
+              aria-describedby="exampleFormControlInputHelpInline"
+              required
+            />
+            <CFormInput
+              type="text"
+              id="conf_val"
+              label="Value Config"
+              value={confVal}
+              onChange={(e) => setConfVal(e.target.value)}
+              placeholder=""
+              aria-describedby="exampleFormControlInputHelpInline"
+              required
+            />
+            <CFormTextarea
+              type="text"
+              id="note"
+              label="Keterangan"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              placeholder=""
+              aria-describedby="exampleFormControlInputHelpInline"
+            />
+          </div>
+          <div className="col-md-6">
+            <Dropzone onChange={updateFiles} value={files}>
+              {files.map((file, index) => (
+                <FileMosaic key={index} file={file} preview />
+              ))}
+            </Dropzone>
+          </div>
+        </div>
         <br />
         <CButton className="m-1" color="secondary" onClick={goBack}>
-          Kembali
+          <i className="fa fa-arrow-left"></i> Kembali
         </CButton>
         <button type="submit" className="btn btn-primary m-1">
-          Simpan
+        <i className="fa fa-save"></i> Simpan
         </button>
         <CButton color="danger" className="m-1" onClick={del} hidden={id ? false : true}>
-          Hapus
+        <i className="fa fa-trash"></i> Hapus
         </CButton>
       </CForm>
     </>

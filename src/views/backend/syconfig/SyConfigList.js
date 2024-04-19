@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CTable, CForm, CFormInput, CInputGroup, CButton, CSpinner } from '@coreui/react'
+import '@fortawesome/fontawesome-free/css/all.min.css'
 import { API_BASE_URL } from '../../../wfHelper'
 
 const sy_configFrm = () => {
@@ -9,10 +10,12 @@ const sy_configFrm = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const [total, setTotal] = useState(0)
+  const [sortKey, setSortKey] = useState('')
+  const [sortOrder, setSortOrder] = useState('asc')
 
   useEffect(() => {
     getList()
-  }, [searchQuery, currentPage])
+  }, [searchQuery, currentPage, sortKey, sortOrder])
 
   const getList = async () => {
     try {
@@ -21,7 +24,7 @@ const sy_configFrm = () => {
       const limit = '10'
 
       const response = await fetch(
-        `${API_BASE_URL}sy_config/getlist?q=${q}&page=${page}&limit=${limit}`,
+        `${API_BASE_URL}sy_config/getlist?q=${q}&page=${page}&limit=${limit}&sortKey=${sortKey}&sortOrder=${sortOrder}`,
       )
       const responseData = await response.json()
       setData(responseData.data)
@@ -36,6 +39,17 @@ const sy_configFrm = () => {
   const handleSearch = () => {
     setCurrentPage(1)
     getList()
+  }
+
+  const handleSort = (key) => {
+    if (key === sortKey) {
+      // Toggle sort order if the same key is clicked again
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
+    } else {
+      // Set new sort key and default to ascending order
+      setSortKey(key)
+      setSortOrder('asc')
+    }
   }
 
   const navigate = useNavigate()
@@ -58,7 +72,7 @@ const sy_configFrm = () => {
       <div className="row">
         <div className="mb-2 col-md-5">
           <CButton color="primary" onClick={newFrm}>
-            Tambah
+            <i className="fas fa-plus"></i> Tambah
           </CButton>
         </div>
         <div className="mb-2 col-md-3"></div>
@@ -66,24 +80,38 @@ const sy_configFrm = () => {
           <CInputGroup className="mb-3">
             <CFormInput
               type="text"
-              placeholder="Search..."
+              placeholder="Cari..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
             <CButton color="primary" onClick={handleSearch}>
-              Search
+              <i className="fas fa-search"></i>
             </CButton>
           </CInputGroup>
         </CForm>
       </div>
       <CTable hover responsive>
         <thead>
-          <tr>
+          <tr style={{ cursor: 'pointer' }} title="Klik untuk sorting">
             <th>#</th>
-            <th>Nama</th>
-            <th>Value</th>
-            <th>Note</th>
-            {/* Tambahkan kolom-kolom lain sesuai kebutuhan */}
+            <th onClick={() => handleSort('conf_name')}>
+              Nama{' '}
+              {sortKey === 'conf_name' && (
+                <span className={`fa fa-caret-${sortOrder === 'asc' ? 'up' : 'down'}`}></span>
+              )}
+            </th>
+            <th onClick={() => handleSort('conf_val')}>
+              Value{' '}
+              {sortKey === 'conf_val' && (
+                <span className={`fa fa-caret-${sortOrder === 'asc' ? 'up' : 'down'}`}></span>
+              )}
+            </th>
+            <th onClick={() => handleSort('note')}>
+              Note{' '}
+              {sortKey === 'note' && (
+                <span className={`fa fa-caret-${sortOrder === 'asc' ? 'up' : 'down'}`}></span>
+              )}
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -92,6 +120,8 @@ const sy_configFrm = () => {
               key={index}
               className="cursor-pointer"
               onClick={() => navigate(`/backend/sy-config-frm/${item.id}`)}
+              style={{ cursor: 'pointer' }}
+              title="Klik untuk edit dan hapus"
             >
               <td>{index + 1}</td>
               <td>{item.conf_name}</td>
