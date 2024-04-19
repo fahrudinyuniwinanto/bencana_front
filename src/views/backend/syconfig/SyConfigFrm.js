@@ -23,7 +23,7 @@ const SyConfigFrm = () => {
   const updateFiles = (incomingFiles) => {
     console.log(incomingFiles)
     setFiles(incomingFiles)
-    sendFilesToBackend(incomingFiles)
+    // sendFilesToBackend(incomingFiles)
   }
 
   const sendFilesToBackend = async (files) => {
