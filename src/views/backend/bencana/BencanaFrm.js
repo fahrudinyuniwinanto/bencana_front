@@ -1,24 +1,40 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { CForm, CButton, CFormInput, CFormTextarea } from '@coreui/react'
+import { CForm, CButton, CFormInput, CFormTextarea, CFormSelect } from '@coreui/react'
 import { Dropzone, FileMosaic } from '@dropzone-ui/react'
 import Swal from 'sweetalert2'
 import { API_BASE_URL } from '../../../wfHelper'
 
-const SyConfigFrm = () => {
-  const [confName, setConfName] = useState('')
-  const [confVal, setConfVal] = useState('')
-  const [note, setNote] = useState('')
+const BencanaFrm = () => {
+  const baseUrl = API_BASE_URL + 'm_bencana'
+  const [id_m_bencana, setIdMBencana] = useState('')
+  const [id_m_klasifikasi, setIdMKlasifikasi] = useState('')
+  const [klasifikasiOptions, setKlasifikasiOptions] = useState([])
+  const [nama_bencana, setNamaBencana] = useState('')
   const { id, setId } = useParams()
   const navigate = useNavigate()
   const [files, setFiles] = React.useState([])
 
-  //constructtor
+  //constructor
   useEffect(() => {
-    if (id) {
-      read(id)
+    // Panggil API backend untuk mendapatkan data klasifikasi
+    const fetchKlasifikasi = async () => {
+      try {
+        const response = await fetch(`${baseUrl}/getArrKlasifikasi`)
+        console.log(response)
+        if (!response.ok) {
+          throw new Error('Gagal mengambil data master klasifikasi')
+        }
+        const data = await response.json()
+        setKlasifikasiOptions(data) // Simpan data klasifikasi ke dalam state
+      } catch (error) {
+        console.error(error)
+      }
     }
-  }, [id])
+
+    fetchKlasifikasi()
+  }, []) // Efek ini hanya dijalankan sekali saat komponen dimuat
+
 
   const updateFiles = (incomingFiles) => {
     console.log(incomingFiles)
@@ -34,15 +50,15 @@ const SyConfigFrm = () => {
         formData.append('files[]', file)
       })
 
-      const response = await fetch(`${API_BASE_URL}sy_config/uploadfiles`, {
+      const response = await fetch(`${baseUrl}/uploadfiles`, {
         method: 'POST',
         body: formData,
         headers: {},
       })
       if (!response.ok) {
-        throw new Error('Failed to upload files')
+        throw new Error('Gagal mengupload files')
       }
-      console.log('Files uploaded successfully')
+      console.log('File berhasil diupload')
     } catch (error) {
       console.error('Error:', error.message)
     }
@@ -51,22 +67,21 @@ const SyConfigFrm = () => {
     e.preventDefault()
     const data = {
       h: {
-        conf_name: confName,
-        conf_val: confVal,
-        note: note,
-        id: id,
+        id_m_bencana: id_m_bencana,
+        id_m_klasifikasi: id_m_klasifikasi,
+        nama_bencana: nama_bencana,
       },
       f: {
-        crud: id ? 'u' : 'c', // Jika id ada, gunakan 'u' untuk update, jika tidak gunakan 'c' untuk create
+        crud: id ? 'u' : 'c',
       },
     }
     try {
-      const response = await fetch(`${API_BASE_URL}sy_config/save`, {
+      const response = await fetch(`${baseUrl}/save`, {
         method: 'POST',
         body: JSON.stringify(data),
       })
       if (!response.ok) {
-        throw new Error('Failed to save data')
+        throw new Error('Gagal menyimpan data')
       }
 
       navigate('/backend/sy-config-list')
@@ -78,14 +93,14 @@ const SyConfigFrm = () => {
   const read = async (id) => {
     console.log(id)
     try {
-      const response = await fetch(`${API_BASE_URL}sy_config/read/${id}`)
+      const response = await fetch(`${baseUrl}/read/${id}`)
       if (!response.ok) {
-        throw new Error('Failed to fetch data')
+        throw new Error('Gagal mengambil data')
       }
       const data = await response.json()
-      setConfName(data.h.conf_name)
-      setConfVal(data.h.conf_val)
-      setNote(data.h.note)
+      setIdMBencana(data.h.id_m_bencana)
+      setIdMKlasifikasi(data.h.id_m_klasifikasi)
+      setNamaBencana(data.h.nama_bencana)
     } catch (error) {
       console.error(error)
     }
@@ -107,17 +122,17 @@ const SyConfigFrm = () => {
 
       // Jika pengguna menekan tombol "Yes"
       if (result.isConfirmed) {
-        const response = await fetch(`${API_BASE_URL}sy_config/del/${id}`)
+        const response = await fetch(`${baseUrl}/del/${id}`)
         if (!response.ok) {
-          throw new Error('Failed to delete data')
+          throw new Error('Gagal menghapus data')
         }
         // Tampilkan SweetAlert saat berhasil menghapus
         Swal.fire({
           icon: 'success',
           title: 'Success',
-          text: 'Data has been deleted successfully!',
+          text: 'Data berhasil dihapus!',
         }).then(() => {
-          navigate('/backend/sy-config-list')
+          navigate('/backend/bencana-list')
         })
       }
     } catch (error) {
@@ -126,17 +141,17 @@ const SyConfigFrm = () => {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
-        text: 'Failed to delete data!',
+        text: 'Data gagal dihapus!',
       })
     }
   }
   const goBack = () => {
-    navigate('/backend/sy-config-list')
+    navigate('/backend/bencana-list')
   }
 
   return (
     <>
-      <h1>{id ? 'Update' : 'Tambah'} Data Konfigurasi Sistem</h1>
+      <h1>{id ? 'Update' : 'Tambah'} Data Bencana</h1>
       <hr />
       <div className="row">
         <div className="col-lg-3"></div>
@@ -148,42 +163,38 @@ const SyConfigFrm = () => {
           <div className="col-md-4">
             <CFormInput
               type="text"
-              id="i"
+              id="id_m_bencana"
               label="ID"
-              value={id}
-              onChange={(e) => setId(e.target.value)}
+              value={id_m_bencana}
+              onChange={(e) => setIdMBencana(e.target.value)}
               placeholder=""
               aria-describedby="exampleFormControlInputHelpInline"
               readOnly
             />
-            <CFormInput
+            <CFormSelect
+              id="id_m_klasifikasi"
+              label="Klasifikasi"
+              value={id_m_klasifikasi}
+              onChange={(e) => setIdMKlasifikasi(e.target.value)}
+              placeholder=""
+              required
+            >
+              <option value="">Pilih Klasifikasi</option>
+              {klasifikasiOptions.map((option) => (
+                <option key={option.id} value={option.id}>
+                  {option.nama_klasifikasi}
+                </option>
+              ))}
+            </CFormSelect>
+            <CFormTextarea
               type="text"
-              id="conf_name"
-              label="Nama Config"
-              value={confName}
-              onChange={(e) => setConfName(e.target.value)}
+              id="nama_bencana"
+              label="Nama Bencana"
+              value={nama_bencana}
+              onChange={(e) => setNamaBencana(e.target.value)}
               placeholder=""
               aria-describedby="exampleFormControlInputHelpInline"
               required
-            />
-            <CFormTextarea
-              type="text"
-              id="conf_val"
-              label="Value Config"
-              value={confVal}
-              onChange={(e) => setConfVal(e.target.value)}
-              placeholder=""
-              aria-describedby="exampleFormControlInputHelpInline"
-              required
-            />
-            <CFormTextarea
-              type="text"
-              id="note"
-              label="Keterangan"
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              placeholder=""
-              aria-describedby="exampleFormControlInputHelpInline"
             />
           </div>
           <div className="col-md-6">
@@ -199,14 +210,14 @@ const SyConfigFrm = () => {
           <i className="fa fa-arrow-left"></i> Kembali
         </CButton>
         <button type="submit" className="btn btn-primary m-1">
-        <i className="fa fa-save"></i> Simpan
+          <i className="fa fa-save"></i> Simpan
         </button>
         <CButton color="danger" className="m-1" onClick={del} hidden={id ? false : true}>
-        <i className="fa fa-trash"></i> Hapus
+          <i className="fa fa-trash"></i> Hapus
         </CButton>
       </CForm>
     </>
   )
 }
 
-export default SyConfigFrm
+export default BencanaFrm

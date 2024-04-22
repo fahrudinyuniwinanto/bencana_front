@@ -8,6 +8,7 @@ import {
   cilCursor,
   cilDescription,
   cilDrop,
+  cilFactorySlash,
   cilNotes,
   cilPencil,
   cilPuzzle,
@@ -46,6 +47,12 @@ const _nav = [
   {
     component: CNavTitle,
     name: 'Master Data',
+  },
+  {
+    component: CNavItem,
+    name: 'Bencana',
+    to: '/backend/bencana-list',
+    icon: <CIcon icon={cilFactorySlash} customClassName="nav-icon" />,
   },
   {
     component: CNavTitle,

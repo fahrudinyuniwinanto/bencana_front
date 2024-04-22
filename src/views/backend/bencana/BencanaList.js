@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CTable, CForm, CFormInput, CInputGroup, CButton, CSpinner } from '@coreui/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus, faSearch, faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons'
 import { API_BASE_URL } from '../../../wfHelper'
 
-const sy_configFrm = () => {
+const bencanaFrm = () => {
+  const baseUrl = API_BASE_URL + 'm_bencana'
   const [data, setData] = useState([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
@@ -12,7 +14,7 @@ const sy_configFrm = () => {
   const [total, setTotal] = useState(0)
   const [sortKey, setSortKey] = useState('')
   const [sortOrder, setSortOrder] = useState('asc')
-  const limit = '10'
+  const limit = 10
 
   useEffect(() => {
     getList()
@@ -20,13 +22,12 @@ const sy_configFrm = () => {
 
   const getList = async () => {
     try {
-      const q = searchQuery || '' // Gunakan searchQuery jika tidak kosong, jika tidak kosong, gunakan string kosong
+      const q = searchQuery || ''
       const page = currentPage
 
       const response = await fetch(
-        `${API_BASE_URL}sy_config/getlist?q=${q}&page=${page}&limit=${limit}&sortKey=${sortKey}&sortOrder=${sortOrder}`,
+        `${baseUrl}/getlist?q=${q}&page=${page}&limit=${limit}&sortKey=${sortKey}&sortOrder=${sortOrder}`,
       )
-      console.log(response)
       const responseData = await response.json()
       setData(responseData.data)
       setTotal(Math.ceil(responseData.total / limit))
@@ -39,10 +40,8 @@ const sy_configFrm = () => {
 
   const handleSort = (key) => {
     if (key === sortKey) {
-      // Toggle sort order if the same key is clicked again
       setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
     } else {
-      // Set new sort key and default to ascending order
       setSortKey(key)
       setSortOrder('asc')
     }
@@ -50,7 +49,7 @@ const sy_configFrm = () => {
 
   const navigate = useNavigate()
   const newFrm = () => {
-    navigate('/backend/sy-config-frm')
+    navigate('/backend/bencana-frm')
   }
 
   if (loading) {
@@ -63,12 +62,12 @@ const sy_configFrm = () => {
 
   return (
     <div>
-      <h1>List Konfigurasi Sistem</h1>
+      <h1>List Bencana</h1>
       <hr />
       <div className="row">
         <div className="mb-2 col-md-5">
           <CButton color="primary" onClick={newFrm}>
-            <i className="fas fa-plus"></i> Tambah
+            <FontAwesomeIcon icon={faPlus} /> Tambah Data
           </CButton>
         </div>
         <div className="mb-2 col-md-3"></div>
@@ -81,7 +80,7 @@ const sy_configFrm = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
             <CButton color="primary" onClick={getList}>
-              <i className="fas fa-search"></i>
+              <FontAwesomeIcon icon={faSearch} />
             </CButton>
           </CInputGroup>
         </CForm>
@@ -90,24 +89,18 @@ const sy_configFrm = () => {
         <thead>
           <tr style={{ cursor: 'pointer' }} title="Klik untuk sorting">
             <th>#</th>
-            <th onClick={() => handleSort('conf_name')}>
-              Nama{' '}
-              {sortKey === 'conf_name' && (
-                <span className={`fa fa-caret-${sortOrder === 'asc' ? 'up' : 'down'}`}></span>
-              )}
-            </th>
-            <th onClick={() => handleSort('conf_val')}>
-              Value{' '}
-              {sortKey === 'conf_val' && (
-                <span className={`fa fa-caret-${sortOrder === 'asc' ? 'up' : 'down'}`}></span>
-              )}
-            </th>
-            <th onClick={() => handleSort('note')}>
-              Note{' '}
-              {sortKey === 'note' && (
-                <span className={`fa fa-caret-${sortOrder === 'asc' ? 'up' : 'down'}`}></span>
-              )}
-            </th>
+            <SortableColumn
+              title="Klasifikasi Bencana"
+              sortKey="id_m_klasifikasi"
+              handleSort={handleSort}
+              sortOrder={sortOrder}
+            />
+            <SortableColumn
+              title="Nama Bencana"
+              sortKey="nama_bencana"
+              handleSort={handleSort}
+              sortOrder={sortOrder}
+            />
           </tr>
         </thead>
         <tbody>
@@ -115,15 +108,13 @@ const sy_configFrm = () => {
             <tr
               key={index}
               className="cursor-pointer"
-              onClick={() => navigate(`/backend/sy-config-frm/${item.id}`)}
+              onClick={() => navigate(`/backend/bencana-frm/${item.id_m_bencana}`)}
               style={{ cursor: 'pointer' }}
               title="Klik untuk edit dan hapus"
             >
               <td>{index + 1}</td>
-              <td>{item.conf_name}</td>
-              <td>{item.conf_val}</td>
-              <td>{item.note}</td>
-              {/* Tambahkan kolom-kolom lain sesuai kebutuhan */}
+              <td>{item.id_m_klasifikasi}</td>
+              <td>{item.nama_bencana}</td>
             </tr>
           ))}
         </tbody>
@@ -143,4 +134,17 @@ const sy_configFrm = () => {
   )
 }
 
-export default sy_configFrm
+const SortableColumn = ({ title, sortKey, handleSort, sortOrder }) => {
+  return (
+    <th onClick={() => handleSort(sortKey)}>
+      {title}{' '}
+      {sortOrder === 'asc' ? (
+        <FontAwesomeIcon icon={faCaretUp} />
+      ) : (
+        <FontAwesomeIcon icon={faCaretDown} />
+      )}
+    </th>
+  )
+}
+
+export default bencanaFrm

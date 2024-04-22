@@ -50,9 +50,13 @@ const Toasts = React.lazy(() => import('./views/notifications/toasts/Toasts'))
 
 const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 
-// Bencana
+// syconfig
 const SyConfigList = React.lazy(() => import('./views/backend/syconfig/SyConfigList'))
 const SyConfigFrm = React.lazy(() => import('./views/backend/syconfig/SyConfigFrm'))
+
+// master bencana
+const BencanaList = React.lazy(() => import('./views/backend/bencana/BencanaList'))
+const BencanaFrm = React.lazy(() => import('./views/backend/bencana/BencanaFrm'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -102,6 +106,9 @@ const routes = [
   { path: '/backend/sy-config-list', name: 'SyConfig List', element: SyConfigList },
   { path: '/backend/sy-config-frm/', name: 'SyConfig Form', element: SyConfigFrm },
   { path: '/backend/sy-config-frm/:id', name: 'SyConfig Form', element: SyConfigFrm },
+  { path: '/backend/bencana-list', name: 'Bencana List', element: BencanaList },
+  { path: '/backend/bencana-frm/', name: 'Bencana Form', element: BencanaFrm },
+  { path: '/backend/bencana-frm/:id', name: 'Bencana Form', element: BencanaFrm },
 ]
 
 export default routes
