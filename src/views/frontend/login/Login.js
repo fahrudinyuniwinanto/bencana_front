@@ -39,7 +39,6 @@ const Login = () => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          method: 'GET',
           // Jika diperlukan, tambahkan header lain yang diperlukan untuk autentikasi
         },
       })
