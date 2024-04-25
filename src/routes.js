@@ -58,6 +58,7 @@ const SyConfigFrm = React.lazy(() => import('./views/backend/syconfig/SyConfigFr
 const BencanaList = React.lazy(() => import('./views/backend/bencana/BencanaList'))
 const BencanaFrm = React.lazy(() => import('./views/backend/bencana/BencanaFrm'))
 
+
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
