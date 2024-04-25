@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import {
   CButton,
@@ -21,6 +21,11 @@ const Login = () => {
   // State untuk menyimpan nilai dari field username dan password
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [tokenAwal, setTokenAwal] = useState('')
+
+  useEffect(() => {
+    getToken()
+  }, [tokenAwal])
 
   // Handler untuk perubahan nilai pada field username dan password
   const handleUsernameChange = (e) => {
@@ -34,7 +39,6 @@ const Login = () => {
   // Fungsi untuk mendapatkan token dari API token
   const getToken = async () => {
     try {
-      console.log('Sending request to fetch token...') // Tambahkan log
       const response = await fetch(`${API_BASE_URL}Auth/token_awal`, {
         method: 'GET',
         headers: {
@@ -42,12 +46,22 @@ const Login = () => {
           // Jika diperlukan, tambahkan header lain yang diperlukan untuk autentikasi
         },
       })
-      if (!response.ok) {
-        throw new Error('Failed to fetch token')
-      }
-      const data = await response.json()
-      console.log('Token fetched successfully:', data.token) // Tambahkan log
-      return data.token
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok')
+          }
+          return response.json()
+        })
+        .then((data) => {
+          console.log(data)
+          setTokenAwal(data.token)
+        })
+      // if (!response.ok) {
+      //   throw new Error('Failed to fetch token')
+      // }
+      // const data = await response.json()
+      // console.log('Token fetched successfully:', data.token) // Tambahkan log
+      //return data.token
     } catch (error) {
       console.error('Error fetching token:', error.message) // Tambahkan log
       throw new Error('Failed to fetch token: ' + error.message)
@@ -56,6 +70,7 @@ const Login = () => {
 
   // Handler untuk proses login yang akan mengirimkan data login ke API login
   const handleLogin = () => {
+    console.log(tokenAwal + 'sasa')
     // Lakukan verifikasi data login sebelum mengirim ke API
     if (username && password) {
       // Kirim data login ke API login
@@ -63,7 +78,7 @@ const Login = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${getToken()}`,
+          Authorization: 'Bearer ' + tokenAwal,
         },
         body: JSON.stringify({ username, password }),
       })
