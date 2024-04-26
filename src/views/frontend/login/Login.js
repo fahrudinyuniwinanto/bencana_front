@@ -53,15 +53,8 @@ const Login = () => {
           return response.json()
         })
         .then((data) => {
-          console.log(data)
           setTokenAwal(data.token)
         })
-      // if (!response.ok) {
-      //   throw new Error('Failed to fetch token')
-      // }
-      // const data = await response.json()
-      // console.log('Token fetched successfully:', data.token) // Tambahkan log
-      //return data.token
     } catch (error) {
       console.error('Error fetching token:', error.message) // Tambahkan log
       throw new Error('Failed to fetch token: ' + error.message)
@@ -70,15 +63,13 @@ const Login = () => {
 
   // Handler untuk proses login yang akan mengirimkan data login ke API login
   const handleLogin = () => {
-    console.log(tokenAwal + 'sasa')
     // Lakukan verifikasi data login sebelum mengirim ke API
     if (username && password) {
       // Kirim data login ke API login
       fetch(`${API_BASE_URL}Auth/login`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + tokenAwal,
+          Authorization: tokenAwal,
         },
         body: JSON.stringify({ username, password }),
       })
@@ -87,12 +78,12 @@ const Login = () => {
             throw new Error('Login failed')
           }
           // Handle respons dari API login jika berhasil
-          console.log('Login success')
+          //console.log('Login success')
           // Redirect ke halaman selanjutnya
         })
         .catch((error) => {
           // Handle error jika login gagal
-          console.error('Login error:', error.message)
+          //console.error('Login error:', error.message)
           // Tampilkan pesan kesalahan kepada pengguna
         })
     } else {
