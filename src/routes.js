@@ -57,6 +57,7 @@ const SyConfigFrm = React.lazy(() => import('./views/backend/syconfig/SyConfigFr
 // master bencana
 const BencanaList = React.lazy(() => import('./views/backend/bencana/BencanaList'))
 const BencanaFrm = React.lazy(() => import('./views/backend/bencana/BencanaFrm'))
+const CrudGeneratorPage = React.lazy(() => import('./views/system/CrudGeneratorPage'))
 
 
 const routes = [
@@ -110,6 +111,7 @@ const routes = [
   { path: '/backend/bencana-list', name: 'Bencana List', element: BencanaList },
   { path: '/backend/bencana-frm/', name: 'Bencana Form', element: BencanaFrm },
   { path: '/backend/bencana-frm/:id', name: 'Bencana Form', element: BencanaFrm },
+  { path: '/system/crud-generator', name: 'Crud Generator', element: CrudGeneratorPage },
 ]
 
 export default routes

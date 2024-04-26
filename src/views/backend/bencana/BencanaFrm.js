@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { CForm, CButton, CFormInput, CFormTextarea, CFormSelect } from '@coreui/react'
+import { CForm, CButton, CFormInput, CFormTextarea, CFormSelect, CFormLabel } from '@coreui/react'
 import { Dropzone, FileMosaic } from '@dropzone-ui/react'
 import Swal from 'sweetalert2'
 import { API_BASE_URL } from '../../../wfHelper'
+import Select from 'react-select'
 
 const BencanaFrm = () => {
   const baseUrl = API_BASE_URL + 'm_bencana'
@@ -14,28 +15,20 @@ const BencanaFrm = () => {
   const { id, setId } = useParams()
   const navigate = useNavigate()
   const [files, setFiles] = React.useState([])
-
   //constructor
   useEffect(() => {
-    // Panggil API backend untuk mendapatkan data klasifikasi
-    const fetchKlasifikasi = async () => {
-      try {
-        const response = await fetch(`${baseUrl}/getArrKlasifikasi`)
-        console.log(response)
-        if (!response.ok) {
-          throw new Error('Gagal mengambil data master klasifikasi')
-        }
-        const data = await response.json()
-        setKlasifikasiOptions(data) // Simpan data klasifikasi ke dalam state
-      } catch (error) {
-        console.error(error)
-      }
-    }
-
     fetchKlasifikasi()
   }, []) // Efek ini hanya dijalankan sekali saat komponen dimuat
 
-
+  const fetchKlasifikasi = async () => {
+    try {
+      const response = await fetch(`${baseUrl}/getArrKlasifikasi`)
+      const data = await response.json()
+      setKlasifikasiOptions(data)
+    } catch (error) {
+      console.error(error)
+    }
+  }
   const updateFiles = (incomingFiles) => {
     console.log(incomingFiles)
     setFiles(incomingFiles)
@@ -84,7 +77,7 @@ const BencanaFrm = () => {
         throw new Error('Gagal menyimpan data')
       }
 
-      navigate('/backend/sy-config-list')
+      navigate('/backend/bencana-list')
     } catch (error) {
       console.error(error)
     }
@@ -171,21 +164,12 @@ const BencanaFrm = () => {
               aria-describedby="exampleFormControlInputHelpInline"
               readOnly
             />
-            <CFormSelect
-              id="id_m_klasifikasi"
-              label="Klasifikasi"
+            <CFormLabel htmlFor="id_m_klasifikasi">Klasifikasi</CFormLabel>
+            <Select
               value={id_m_klasifikasi}
-              onChange={(e) => setIdMKlasifikasi(e.target.value)}
-              placeholder=""
-              required
-            >
-              <option value="">Pilih Klasifikasi</option>
-              {klasifikasiOptions.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.nama_klasifikasi}
-                </option>
-              ))}
-            </CFormSelect>
+              onChange={setIdMKlasifikasi}
+              options={klasifikasiOptions}
+            />
             <CFormTextarea
               type="text"
               id="nama_bencana"

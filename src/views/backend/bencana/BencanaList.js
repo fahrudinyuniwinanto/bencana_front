@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { CTable, CForm, CFormInput, CInputGroup, CButton, CSpinner } from '@coreui/react'
+import {
+  CTable,
+  CForm,
+  CFormInput,
+  CInputGroup,
+  CButton,
+  CSpinner,
+  CCard,
+  CCardBody,
+  CCardHeader,
+} from '@coreui/react'
+import { DocsLink } from 'src/components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faSearch, faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons'
 import { API_BASE_URL } from '../../../wfHelper'
@@ -62,74 +73,81 @@ const bencanaFrm = () => {
 
   return (
     <div>
-      <h1>List Bencana</h1>
-      <hr />
-      <div className="row">
-        <div className="mb-2 col-md-5">
-          <CButton color="primary" onClick={newFrm}>
-            <FontAwesomeIcon icon={faPlus} /> Tambah Data
-          </CButton>
-        </div>
-        <div className="mb-2 col-md-3"></div>
-        <CForm className="mb-2 col-md-4">
-          <CInputGroup className="mb-3">
-            <CFormInput
-              type="text"
-              placeholder="Cari..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <CButton color="primary" onClick={getList}>
-              <FontAwesomeIcon icon={faSearch} />
-            </CButton>
-          </CInputGroup>
-        </CForm>
-      </div>
-      <CTable hover responsive>
-        <thead>
-          <tr style={{ cursor: 'pointer' }} title="Klik untuk sorting">
-            <th>#</th>
-            <SortableColumn
-              title="Klasifikasi Bencana"
-              sortKey="id_m_klasifikasi"
-              handleSort={handleSort}
-              sortOrder={sortOrder}
-            />
-            <SortableColumn
-              title="Nama Bencana"
-              sortKey="nama_bencana"
-              handleSort={handleSort}
-              sortOrder={sortOrder}
-            />
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((item, index) => (
-            <tr
-              key={index}
-              className="cursor-pointer"
-              onClick={() => navigate(`/backend/bencana-frm/${item.id_m_bencana}`)}
-              style={{ cursor: 'pointer' }}
-              title="Klik untuk edit dan hapus"
-            >
-              <td>{index + 1}</td>
-              <td>{item.id_m_klasifikasi}</td>
-              <td>{item.nama_bencana}</td>
-            </tr>
-          ))}
-        </tbody>
-      </CTable>
-      <nav aria-label="Page navigation">
-        <ul className="pagination justify-content-end">
-          {Array.from({ length: total }, (_, i) => i + 1).map((page) => (
-            <li key={page} className={`page-item ${page === currentPage ? 'active' : ''}`}>
-              <button className="page-link" onClick={() => setCurrentPage(page)}>
-                {page}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </nav>
+      <CCard className="mb-4">
+        <CCardHeader>
+          Bencana
+          <DocsLink href="https://coreui.io/docs/content/typography/" />
+        </CCardHeader>
+        <CCardBody>
+          <p>Klik pada baris untuk melakukan edit atau hapus</p>
+          <div className="row">
+            <div className="mb-2 col-md-5">
+              <CButton color="primary" onClick={newFrm}>
+                <FontAwesomeIcon icon={faPlus} /> Tambah Data
+              </CButton>
+            </div>
+            <div className="mb-2 col-md-3"></div>
+            <CForm className="mb-2 col-md-4">
+              <CInputGroup className="mb-3">
+                <CFormInput
+                  type="text"
+                  placeholder="Cari..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                <CButton color="primary" onClick={getList}>
+                  <FontAwesomeIcon icon={faSearch} />
+                </CButton>
+              </CInputGroup>
+            </CForm>
+          </div>
+          <CTable hover responsive>
+            <thead>
+              <tr style={{ cursor: 'pointer' }} title="Klik untuk sorting">
+                <th>#</th>
+                <SortableColumn
+                  title="Klasifikasi Bencana"
+                  sortKey="id_m_klasifikasi"
+                  handleSort={handleSort}
+                  sortOrder={sortOrder}
+                />
+                <SortableColumn
+                  title="Nama Bencana"
+                  sortKey="nama_bencana"
+                  handleSort={handleSort}
+                  sortOrder={sortOrder}
+                />
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((item, index) => (
+                <tr
+                  key={index}
+                  className="cursor-pointer"
+                  onClick={() => navigate(`/backend/bencana-frm/${item.id_m_bencana}`)}
+                  style={{ cursor: 'pointer' }}
+                  title="Klik untuk edit dan hapus"
+                >
+                  <td>{index + 1}</td>
+                  <td>{item.id_m_klasifikasi}</td>
+                  <td>{item.nama_bencana}</td>
+                </tr>
+              ))}
+            </tbody>
+          </CTable>
+          <nav aria-label="Page navigation">
+            <ul className="pagination justify-content-end">
+              {Array.from({ length: total }, (_, i) => i + 1).map((page) => (
+                <li key={page} className={`page-item ${page === currentPage ? 'active' : ''}`}>
+                  <button className="page-link" onClick={() => setCurrentPage(page)}>
+                    {page}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </CCardBody>
+      </CCard>
     </div>
   )
 }
