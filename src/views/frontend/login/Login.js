@@ -15,18 +15,31 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
-import { API_BASE_URL } from '../../../wfHelper'
+import { parsys, API_BASE_URL } from '../../../wfHelper'
 
 const Login = () => {
   // State untuk menyimpan nilai dari field username dan password
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [tokenAwal, setTokenAwal] = useState('')
+  const [appName, setAppName] = useState('')
+  const [appDesc, setAppDesc] = useState('')
 
   useEffect(() => {
     getToken()
+    fetchParsys()
   }, [tokenAwal])
 
+  const fetchParsys = async () => {
+    try {
+      const name = await parsys('APP_NAME')
+      const desc = await parsys('APP_DESC')
+      setAppName(name)
+      setAppDesc(desc)
+    } catch (error) {
+      console.error(error)
+    }
+  }
   // Handler untuk perubahan nilai pada field username dan password
   const handleUsernameChange = (e) => {
     setUsername(e.target.value)
@@ -144,11 +157,11 @@ const Login = () => {
               <CCard className="text-white bg-primary py-5" style={{ width: '44%' }}>
                 <CCardBody className="text-center">
                   <div>
-                    <h2>APP Name</h2>
-                    <p>APP Des</p>
+                    <h2>{appName}</h2>
+                    <p>{appDesc}</p>
                     <Link to="#">
                       <CButton color="primary" className="mt-3" active tabIndex={-1}>
-                        APP Btn
+                        Website
                       </CButton>
                     </Link>
                   </div>
