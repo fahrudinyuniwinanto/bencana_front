@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import { useNavigate,Link } from 'react-router-dom';
 import {
   CButton,
   CCard,
@@ -12,73 +12,68 @@ import {
   CInputGroup,
   CInputGroupText,
   CRow,
-} from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import { cilLockLocked, cilUser } from '@coreui/icons'
-import { parsys, API_BASE_URL } from '../../../wfHelper'
+} from '@coreui/react';
+import CIcon from '@coreui/icons-react';
+import { cilLockLocked, cilUser } from '@coreui/icons';
+import { parsys, API_BASE_URL } from '../../../wfHelper';
+import Swal from 'sweetalert2'
 
 const Login = () => {
-  // State untuk menyimpan nilai dari field username dan password
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [tokenAwal, setTokenAwal] = useState('')
-  const [appName, setAppName] = useState('')
-  const [appDesc, setAppDesc] = useState('')
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [tokenAwal, setTokenAwal] = useState('');
+  const [appName, setAppName] = useState('');
+  const [appDesc, setAppDesc] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
-    getToken()
-    fetchParsys()
-  }, [tokenAwal])
+    getToken();
+    fetchParsys();
+  }, [tokenAwal]);
 
   const fetchParsys = async () => {
     try {
-      const name = await parsys('APP_NAME')
-      const desc = await parsys('APP_DESC')
-      setAppName(name)
-      setAppDesc(desc)
+      const name = await parsys('APP_NAME');
+      const desc = await parsys('APP_DESC');
+      setAppName(name);
+      setAppDesc(desc);
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
   }
-  // Handler untuk perubahan nilai pada field username dan password
+
   const handleUsernameChange = (e) => {
-    setUsername(e.target.value)
+    setUsername(e.target.value);
   }
 
   const handlePasswordChange = (e) => {
-    setPassword(e.target.value)
+    setPassword(e.target.value);
   }
 
-  // Fungsi untuk mendapatkan token dari API token
   const getToken = async () => {
     try {
       const response = await fetch(`${API_BASE_URL}Auth/token_awal`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          // Jika diperlukan, tambahkan header lain yang diperlukan untuk autentikasi
         },
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok')
-          }
-          return response.json()
-        })
-        .then((data) => {
-          setTokenAwal(data.token)
-        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      setTokenAwal(data.token);
     } catch (error) {
-      console.error('Error fetching token:', error.message) // Tambahkan log
-      throw new Error('Failed to fetch token: ' + error.message)
+      console.error('Error fetching token:', error.message);
+      throw new Error('Failed to fetch token: ' + error.message);
     }
   }
 
-  // Handler untuk proses login yang akan mengirimkan data login ke API login
   const handleLogin = () => {
-    // Lakukan verifikasi data login sebelum mengirim ke API
     if (username && password) {
-      // Kirim data login ke API login
       fetch(`${API_BASE_URL}Auth/login`, {
         method: 'POST',
         headers: {
@@ -86,25 +81,44 @@ const Login = () => {
         },
         body: JSON.stringify({ username, password }),
       })
-        .then((response) => {
+        .then(async (response) => {
           if (!response.ok) {
-            throw new Error('Login failed')
+            throw new Error('Login failed');
           }
-          // Handle respons dari API login jika berhasil
-          //console.log('Login success')
-          // Redirect ke halaman selanjutnya
+
+          const data = await response.json();
+          // Simpan data login ke local storage
+          localStorage.setItem('userData', JSON.stringify(data));   
+          setIsLoggedIn(true); // Set isLoggedIn menjadi true setelah login berhasil
+        
+
         })
         .catch((error) => {
-          // Handle error jika login gagal
-          //console.error('Login error:', error.message)
+          //console.error('Login error:', error.message);
           // Tampilkan pesan kesalahan kepada pengguna
+          Swal.fire({
+          icon: 'error',
+          title: 'Gagal',
+          text: 'Username atau Password anda salah!',
         })
+         // Set isLoggedIn menjadi true setelah login berhasil
+        });
     } else {
-      // Tampilkan pesan kesalahan jika username atau password kosong
-      console.error('Username and password are required')
+      // console.error('Username and password are required');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Perhatian',
+        text: 'Username and password are required',
+      })
     }
   }
 
+  if (isLoggedIn) {
+    navigate('/backend/sy-config-list'); // Arahkan ke halaman dashboard jika login berhasil
+  } else {
+    navigate('/login'); // Arahkan ke halaman login jika tidak login
+  }
+  
   return (
     <div className="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
@@ -175,4 +189,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default Login;

@@ -12,6 +12,7 @@ const sy_configFrm = () => {
   const [total, setTotal] = useState(0)
   const [sortKey, setSortKey] = useState('')
   const [sortOrder, setSortOrder] = useState('asc')
+  const [isLoggedIn, setIsLoggedIn] = useState('')
   const limit = '10'
 
   useEffect(() => {

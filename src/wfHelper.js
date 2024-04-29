@@ -2,7 +2,8 @@ export const API_BASE_URL = 'http://bencana_back.me/'
 
 export const parsys = async (name) => {
   try {
-    const response = await fetch(`${API_BASE_URL}sy_config/readByName/${name}`)
+    const response = await fetch(`${API_BASE_URL}sy_config/readByName/${name}`,
+  )
     if (!response.ok) {
       throw new Error('Failed to fetch data')
     }
@@ -12,6 +13,7 @@ export const parsys = async (name) => {
   }
 }
 
+<<<<<<< Updated upstream
 export const token = async () => {
   try {
     const response = await fetch(`${API_BASE_URL}Auth/token`, {
@@ -33,3 +35,12 @@ export const token = async () => {
     throw new Error('Failed to fetch token: ' + error.message)
   }
 }
+=======
+export const isLogged = (navigate, isLoggedIn) => {
+  if (isLoggedIn) {
+    navigate('/backend/sy-config-list'); // Arahkan ke halaman dashboard jika login berhasil
+  } else {
+    navigate('/login'); // Arahkan ke halaman login jika tidak login
+  }
+};
+>>>>>>> Stashed changes
