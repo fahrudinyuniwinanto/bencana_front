@@ -21,7 +21,7 @@ import Select from 'react-select'
 const BencanaFrm = () => {
   const tableName = 'm_bencana'
   const baseUrl = API_BASE_URL + tableName
-  const { id, setId } = useParams()
+  const { id } = useParams()
   const navigate = useNavigate()
   const [idMBencana, setIdMBencana] = useState('')
   const [idMKlasifikasi, setIdMKlasifikasi] = useState('')
@@ -170,7 +170,6 @@ const BencanaFrm = () => {
           <DocsLink href="https://coreui.io/docs/content/typography/" />
         </CCardHeader>
         <CCardBody>
-          <p>Klik pada baris untuk melakukan edit atau hapus</p>
           <div className="row">
             <div className="mb-2 col-md-5"></div>
             <CForm onSubmit={save}>
@@ -202,11 +201,22 @@ const BencanaFrm = () => {
                   />
                 </div>
                 <div className="col-md-6">
-                  <CFormLabel htmlFor="file">Attachment</CFormLabel>
+                  <CFormLabel htmlFor="file">
+                    Attachment <code>Maksimal 2MB dengan type png/jpg</code>
+                  </CFormLabel>
                   <CInputGroup className="mb-3">
                     <CFormInput type="file" onChange={handleFileChange} accept="image/*" />
                   </CInputGroup>
+                  {fileName && (
+                    <>
+                      Nama: {fileName}{' '}
+                      <a href={filePreviewUpdate} download>
+                        Download
+                      </a>
+                    </>
+                  )}
                   <img
+                    className="img-thumbnail"
                     src={filePreviewUpdate}
                     alt="Preview"
                     style={{ maxWidth: '80%', height: 'auto' }}

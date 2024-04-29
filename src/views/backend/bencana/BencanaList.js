@@ -13,7 +13,7 @@ import {
 } from '@coreui/react'
 import { DocsLink } from 'src/components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus, faSearch, faCaretUp, faCaretDown } from '@fortawesome/free-solid-svg-icons'
+import { faPlus, faSearch, faCaretUp, faCaretDown, faEraser } from '@fortawesome/free-solid-svg-icons'
 import { API_BASE_URL } from '../../../wfHelper'
 
 const bencanaFrm = () => {
@@ -79,7 +79,6 @@ const bencanaFrm = () => {
           <DocsLink href="https://coreui.io/docs/content/typography/" />
         </CCardHeader>
         <CCardBody>
-          <p>Klik pada baris untuk melakukan edit atau hapus</p>
           <div className="row">
             <div className="mb-2 col-md-5">
               <CButton color="primary" onClick={newFrm}>
@@ -98,6 +97,11 @@ const bencanaFrm = () => {
                 <CButton color="primary" onClick={getList}>
                   <FontAwesomeIcon icon={faSearch} />
                 </CButton>
+                {searchQuery && ( // Menampilkan tombol "Clear" hanya jika searchQuery tidak kosong
+                  <CButton color="warning" onClick={() => setSearchQuery('')}>
+                    <FontAwesomeIcon icon={faEraser} />
+                  </CButton>
+                )}
               </CInputGroup>
             </CForm>
           </div>
@@ -129,7 +133,7 @@ const bencanaFrm = () => {
                   title="Klik untuk edit dan hapus"
                 >
                   <td>{index + 1}</td>
-                  <td>{item.id_m_klasifikasi}</td>
+                  <td>{item.klasifikasi}</td>
                   <td>{item.nama_bencana}</td>
                 </tr>
               ))}
