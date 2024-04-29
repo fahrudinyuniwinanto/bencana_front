@@ -63,6 +63,9 @@ const SyConfigFrm = () => {
     try {
       const response = await fetch(`${API_BASE_URL}sy_config/save`, {
         method: 'POST',
+        headers: {
+          Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.f0fkZGe81nLqpjaLlV8VLVZwTEuayLrKtoGKF6sR0gI',
+        },
         body: JSON.stringify(data),
       })
       if (!response.ok) {
@@ -78,7 +81,13 @@ const SyConfigFrm = () => {
   const read = async (id) => {
     console.log(id)
     try {
-      const response = await fetch(`${API_BASE_URL}sy_config/read/${id}`)
+      const response = await fetch(`${API_BASE_URL}sy_config/read/${id}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.f0fkZGe81nLqpjaLlV8VLVZwTEuayLrKtoGKF6sR0gI',
+        }
+      })
       if (!response.ok) {
         throw new Error('Failed to fetch data')
       }
@@ -107,7 +116,14 @@ const SyConfigFrm = () => {
 
       // Jika pengguna menekan tombol "Yes"
       if (result.isConfirmed) {
-        const response = await fetch(`${API_BASE_URL}sy_config/del/${id}`)
+        const response = await fetch(`${API_BASE_URL}sy_config/del/${id}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.f0fkZGe81nLqpjaLlV8VLVZwTEuayLrKtoGKF6sR0gI',
+          }
+        }
+      )
         if (!response.ok) {
           throw new Error('Failed to delete data')
         }

@@ -31,6 +31,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@popperjs/core": "^2.11.8",
+    "@reduxjs/toolkit": "^2.2.3",
     "chart.js": "^4.4.2",
     "classnames": "^2.5.1",
     "core-js": "^3.36.1",
@@ -41,8 +42,7 @@
     "react-google-recaptcha": "^3.1.0",
     "react-redux": "^9.1.0",
     "react-router-dom": "^6.22.3",
-    "react-select": "^5.8.0",
-    "redux": "5.0.1",
+    "redux": "^5.0.1",
     "simplebar-react": "^3.2.4",
     "sweetalert2": "^11.6.13"
   },

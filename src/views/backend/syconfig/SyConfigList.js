@@ -25,6 +25,12 @@ const sy_configFrm = () => {
 
       const response = await fetch(
         `${API_BASE_URL}sy_config/getlist?q=${q}&page=${page}&limit=${limit}&sortKey=${sortKey}&sortOrder=${sortOrder}`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.f0fkZGe81nLqpjaLlV8VLVZwTEuayLrKtoGKF6sR0gI',
+          }
+        }
       )
       console.log(response)
       const responseData = await response.json()
