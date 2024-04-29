@@ -1,24 +1,43 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { CForm, CButton, CFormInput, CFormTextarea, CFormSelect, CFormLabel } from '@coreui/react'
+import {
+  CForm,
+  CButton,
+  CFormInput,
+  CFormTextarea,
+  CFormSelect,
+  CFormLabel,
+  CInputGroup,
+  CCard,
+  CCardBody,
+  CCardHeader,
+} from '@coreui/react'
+import { DocsLink } from 'src/components'
 import { Dropzone, FileMosaic } from '@dropzone-ui/react'
 import Swal from 'sweetalert2'
 import { API_BASE_URL } from '../../../wfHelper'
 import Select from 'react-select'
 
 const BencanaFrm = () => {
-  const baseUrl = API_BASE_URL + 'm_bencana'
-  const [id_m_bencana, setIdMBencana] = useState('')
-  const [id_m_klasifikasi, setIdMKlasifikasi] = useState('')
-  const [klasifikasiOptions, setKlasifikasiOptions] = useState([])
-  const [nama_bencana, setNamaBencana] = useState('')
+  const tableName = 'm_bencana'
+  const baseUrl = API_BASE_URL + tableName
   const { id, setId } = useParams()
   const navigate = useNavigate()
-  const [files, setFiles] = React.useState([])
-  //constructor
+  const [idMBencana, setIdMBencana] = useState('')
+  const [idMKlasifikasi, setIdMKlasifikasi] = useState('')
+  const [klasifikasiOptions, setKlasifikasiOptions] = useState([])
+  const [namaBencana, setNamaBencana] = useState('')
+  const [selectedFile, setSelectedFile] = useState(null)
+  const [isFileSelected, setIsFileSelected] = useState(false)
+  const [fileName, setFileName] = useState(null)
+  const [filePreview, setFilePreview] = useState(null)
+  const [filePreviewUpdate, setFilePreviewUpdate] = useState(null)
   useEffect(() => {
+    if (id) {
+      read(id)
+    }
     fetchKlasifikasi()
-  }, []) // Efek ini hanya dijalankan sekali saat komponen dimuat
+  }, [])
 
   const fetchKlasifikasi = async () => {
     try {
@@ -29,46 +48,44 @@ const BencanaFrm = () => {
       console.error(error)
     }
   }
-  const updateFiles = (incomingFiles) => {
-    console.log(incomingFiles)
-    setFiles(incomingFiles)
-    // sendFilesToBackend(incomingFiles)
+  const handleFileChange = (e) => {
+    setSelectedFile(e.target.files[0])
+    setIsFileSelected(true)
+    setFilePreview(URL.createObjectURL(e.target.files[0]))
   }
-
-  const sendFilesToBackend = async (files) => {
+  const sendFile = async () => {
     try {
       const formData = new FormData()
-      files.forEach((file, index) => {
-        console.log(`File ${index + 1}:`, file)
-        formData.append('files[]', file)
-      })
-
-      const response = await fetch(`${baseUrl}/uploadfiles`, {
-        method: 'POST',
-        body: formData,
-        headers: {},
-      })
+      formData.append('file', selectedFile)
+      const response = await fetch(`${baseUrl}/uploadFiles`, { method: 'POST', body: formData })
       if (!response.ok) {
-        throw new Error('Gagal mengupload files')
+        throw new Error('Gagal mengunggah file')
       }
-      console.log('File berhasil diupload')
+      const resfile = await response.json()
+      console.log('File berhasil diunggah:', resfile)
+      return resfile
     } catch (error) {
-      console.error('Error:', error.message)
+      console.error('Error:', error)
+      throw error
     }
   }
+
   const save = async (e) => {
     e.preventDefault()
-    const data = {
-      h: {
-        id_m_bencana: id_m_bencana,
-        id_m_klasifikasi: id_m_klasifikasi,
-        nama_bencana: nama_bencana,
-      },
-      f: {
-        crud: id ? 'u' : 'c',
-      },
-    }
     try {
+      const fileName = await sendFile()
+      console.log('File name:', fileName)
+      const data = {
+        h: {
+          id_m_bencana: idMBencana,
+          id_m_klasifikasi: idMKlasifikasi,
+          nama_bencana: namaBencana,
+          file_name: fileName,
+        },
+        f: {
+          crud: id ? 'u' : 'c',
+        },
+      }
       const response = await fetch(`${baseUrl}/save`, {
         method: 'POST',
         body: JSON.stringify(data),
@@ -76,7 +93,6 @@ const BencanaFrm = () => {
       if (!response.ok) {
         throw new Error('Gagal menyimpan data')
       }
-
       navigate('/backend/bencana-list')
     } catch (error) {
       console.error(error)
@@ -84,8 +100,8 @@ const BencanaFrm = () => {
   }
 
   const read = async (id) => {
-    console.log(id)
     try {
+      console.log(id)
       const response = await fetch(`${baseUrl}/read/${id}`)
       if (!response.ok) {
         throw new Error('Gagal mengambil data')
@@ -94,6 +110,10 @@ const BencanaFrm = () => {
       setIdMBencana(data.h.id_m_bencana)
       setIdMKlasifikasi(data.h.id_m_klasifikasi)
       setNamaBencana(data.h.nama_bencana)
+      setFileName(data.h.file_name)
+      const linkFile = API_BASE_URL + 'assets/upload_files/' + tableName + '/' + data.h.file_name
+      setFilePreviewUpdate(linkFile)
+      console.log(linkFile)
     } catch (error) {
       console.error(error)
     }
@@ -144,62 +164,84 @@ const BencanaFrm = () => {
 
   return (
     <>
-      <h1>{id ? 'Update' : 'Tambah'} Data Bencana</h1>
-      <hr />
-      <div className="row">
-        <div className="col-lg-3"></div>
-      </div>
-
-      <CForm onSubmit={save}>
-        {/* input id readonly */}
-        <div className="row">
-          <div className="col-md-4">
-            <CFormInput
-              type="text"
-              id="id_m_bencana"
-              label="ID"
-              value={id_m_bencana}
-              onChange={(e) => setIdMBencana(e.target.value)}
-              placeholder=""
-              aria-describedby="exampleFormControlInputHelpInline"
-              readOnly
-            />
-            <CFormLabel htmlFor="id_m_klasifikasi">Klasifikasi</CFormLabel>
-            <Select
-              value={id_m_klasifikasi}
-              onChange={setIdMKlasifikasi}
-              options={klasifikasiOptions}
-            />
-            <CFormTextarea
-              type="text"
-              id="nama_bencana"
-              label="Nama Bencana"
-              value={nama_bencana}
-              onChange={(e) => setNamaBencana(e.target.value)}
-              placeholder=""
-              aria-describedby="exampleFormControlInputHelpInline"
-              required
-            />
+      <CCard className="mb-4">
+        <CCardHeader>
+          Form Bencana
+          <DocsLink href="https://coreui.io/docs/content/typography/" />
+        </CCardHeader>
+        <CCardBody>
+          <p>Klik pada baris untuk melakukan edit atau hapus</p>
+          <div className="row">
+            <div className="mb-2 col-md-5"></div>
+            <CForm onSubmit={save}>
+              <div className="row">
+                <div className="col-md-6">
+                  <CFormInput
+                    type="text"
+                    id="idMBencana"
+                    label="ID"
+                    value={idMBencana}
+                    onChange={(e) => setIdMBencana(e.target.value)}
+                    placeholder=""
+                    readOnly
+                  />
+                  <CFormLabel>Klasifikasi</CFormLabel>
+                  <Select
+                    value={klasifikasiOptions.find((option) => option.value === idMKlasifikasi)}
+                    onChange={(selectedOption) => setIdMKlasifikasi(selectedOption.value)}
+                    options={klasifikasiOptions}
+                  />
+                  <CFormTextarea
+                    type="text"
+                    id="namaBencana"
+                    label="Nama Bencana"
+                    value={namaBencana}
+                    onChange={(e) => setNamaBencana(e.target.value)}
+                    placeholder=""
+                    required
+                  />
+                </div>
+                <div className="col-md-6">
+                  <CFormLabel htmlFor="file">Attachment</CFormLabel>
+                  <CInputGroup className="mb-3">
+                    <CFormInput type="file" onChange={handleFileChange} accept="image/*" />
+                  </CInputGroup>
+                  <img
+                    src={filePreviewUpdate}
+                    alt="Preview"
+                    style={{ maxWidth: '80%', height: 'auto' }}
+                    hidden={fileName ? false : true}
+                  />
+                  {isFileSelected && (
+                    <div>
+                      <h3>File Dipilih:</h3>
+                      <p>
+                        Nama: {selectedFile.name} | Tipe: {selectedFile.type} | Ukuran:{' '}
+                        {(selectedFile.size / 1024).toFixed(2)} KB
+                      </p>
+                      <img
+                        src={filePreview}
+                        alt="Preview"
+                        style={{ maxWidth: '80%', height: 'auto' }}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+              <br />
+              <CButton className="m-1" color="secondary" onClick={goBack}>
+                <i className="fa fa-arrow-left"></i> Kembali
+              </CButton>
+              <button type="submit" className="btn btn-primary m-1">
+                <i className="fa fa-save"></i> Simpan
+              </button>
+              <CButton color="danger" className="m-1" onClick={del} hidden={id ? false : true}>
+                <i className="fa fa-trash"></i> Hapus
+              </CButton>
+            </CForm>
           </div>
-          <div className="col-md-6">
-            <Dropzone onChange={updateFiles} value={files}>
-              {files.map((file, index) => (
-                <FileMosaic key={index} file={file} preview />
-              ))}
-            </Dropzone>
-          </div>
-        </div>
-        <br />
-        <CButton className="m-1" color="secondary" onClick={goBack}>
-          <i className="fa fa-arrow-left"></i> Kembali
-        </CButton>
-        <button type="submit" className="btn btn-primary m-1">
-          <i className="fa fa-save"></i> Simpan
-        </button>
-        <CButton color="danger" className="m-1" onClick={del} hidden={id ? false : true}>
-          <i className="fa fa-trash"></i> Hapus
-        </CButton>
-      </CForm>
+        </CCardBody>
+      </CCard>
     </>
   )
 }
