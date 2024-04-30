@@ -1,8 +1,37 @@
-import React from 'react'
+import React , { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { AppContent, AppSidebar, AppFooter, AppHeader } from '../components/index'
 import '@fortawesome/fontawesome-free/css/all.min.css'
 
 const DefaultLayout = () => {
+  
+  const navigate = useNavigate()
+  useEffect(() => {
+    // Memeriksa login sebelum melakukan pengambilan data
+    if (!checkLoggedIn()) {
+      navigate('/login');
+    } else {
+      // Set timeout untuk melakukan logout otomatis setelah 30 menit (1800000 milidetik)
+      const logoutTimer = setTimeout(logout, 1800000); // 30 menit = 1800000 milidetik
+      return () => clearTimeout(logoutTimer); // Membersihkan timeout saat komponen dibongkar
+   
+    }
+  }
+);
+  const checkLoggedIn = () => {
+    // Mendapatkan data pengguna dari localStorage
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    // Mengembalikan nilai dari properti 'logged' (true atau false)
+    return userData?.logged || false;
+  };
+
+  const logout = () => {
+    // Menghapus data pengguna dari localStorage
+    localStorage.removeItem('userData');
+    // Mengarahkan pengguna kembali ke halaman login
+    navigate('/login');
+  }
+
   return (
     <div>
       <AppSidebar />

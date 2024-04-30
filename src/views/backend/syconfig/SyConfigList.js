@@ -12,12 +12,18 @@ const sy_configFrm = () => {
   const [total, setTotal] = useState(0)
   const [sortKey, setSortKey] = useState('')
   const [sortOrder, setSortOrder] = useState('asc')
-  const [isLoggedIn, setIsLoggedIn] = useState('')
   const limit = '10'
 
   useEffect(() => {
-    getList()
+      getList();
   }, [searchQuery, currentPage, sortKey, sortOrder])
+  
+  const checkLoggedIn = () => {
+    // Mendapatkan data pengguna dari localStorage
+    const userData = JSON.parse(localStorage.getItem('userData'));
+    // Mengembalikan nilai dari properti 'logged' (true atau false)
+    return userData?.logged || false;
+  };
 
   const getList = async () => {
     try {
@@ -33,7 +39,12 @@ const sy_configFrm = () => {
           }
         }
       )
-      console.log(response)
+
+      //console.log(response)
+      // Mengambil data dari localStorage
+          const username = localStorage.getItem('userData');
+          // console.log(username); // Output: JohnDoe
+
       const responseData = await response.json()
       setData(responseData.data)
       setTotal(Math.ceil(responseData.total / limit))
@@ -60,6 +71,8 @@ const sy_configFrm = () => {
     navigate('/backend/sy-config-frm')
   }
 
+  
+
   if (loading) {
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
@@ -76,7 +89,7 @@ const sy_configFrm = () => {
         <div className="mb-2 col-md-5">
           <CButton color="primary" onClick={newFrm}>
             <i className="fas fa-plus"></i> Tambah
-          </CButton>
+          </CButton> 
         </div>
         <div className="mb-2 col-md-3"></div>
         <CForm className="mb-2 col-md-4">

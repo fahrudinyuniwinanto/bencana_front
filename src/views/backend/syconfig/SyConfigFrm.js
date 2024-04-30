@@ -21,7 +21,6 @@ const SyConfigFrm = () => {
   }, [id])
 
   const updateFiles = (incomingFiles) => {
-    console.log(incomingFiles)
     setFiles(incomingFiles)
     // sendFilesToBackend(incomingFiles)
   }

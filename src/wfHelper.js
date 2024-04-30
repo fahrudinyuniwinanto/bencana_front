@@ -12,10 +12,26 @@ export const parsys = async (name) => {
   }
 }
 
-export const isLogged = (navigate, isLoggedIn) => {
-  if (isLoggedIn) {
-    navigate('/backend/sy-config-list')
-  } else {
-    navigate('/login')
+export const token = async () => {
+  try {
+    const response = await fetch(`${API_BASE_URL}Auth/token`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }).then((response) => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      return response.json()
+    })
+    // .then((data) => {
+    //   setTokenAwal(data.token)
+    // })
+  } catch (error) {
+    console.error('Error fetching token:', error.message)
+    throw new Error('Failed to fetch token: ' + error.message)
   }
 }
+
+

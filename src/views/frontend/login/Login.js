@@ -24,8 +24,11 @@ const Login = () => {
   const [tokenAwal, setTokenAwal] = useState('');
   const [appName, setAppName] = useState('');
   const [appDesc, setAppDesc] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState('');
   const navigate = useNavigate();
+
+  // if (isLoggedIn) {
+  //   navigate('/dashboard'); // Arahkan ke halaman dashboard jika login berhasil
+  // }
 
   useEffect(() => {
     getToken();
@@ -89,9 +92,9 @@ const Login = () => {
           const data = await response.json();
           // Simpan data login ke local storage
           localStorage.setItem('userData', JSON.stringify(data));   
-          setIsLoggedIn(true); // Set isLoggedIn menjadi true setelah login berhasil
+          navigate('/backend/sy-config-list')
+          
         
-
         })
         .catch((error) => {
           //console.error('Login error:', error.message);
@@ -101,7 +104,6 @@ const Login = () => {
           title: 'Gagal',
           text: 'Username atau Password anda salah!',
         })
-         // Set isLoggedIn menjadi true setelah login berhasil
         });
     } else {
       // console.error('Username and password are required');
@@ -113,11 +115,7 @@ const Login = () => {
     }
   }
 
-  if (isLoggedIn) {
-    navigate('/backend/sy-config-list'); // Arahkan ke halaman dashboard jika login berhasil
-  } else {
-    navigate('/login'); // Arahkan ke halaman login jika tidak login
-  }
+  
   
   return (
     <div className="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center">
