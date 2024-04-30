@@ -2,6 +2,7 @@ import React , { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AppContent, AppSidebar, AppFooter, AppHeader } from '../components/index'
 import '@fortawesome/fontawesome-free/css/all.min.css'
+import { logout } from '../wfHelper'
 
 const DefaultLayout = () => {
   
@@ -11,12 +12,11 @@ const DefaultLayout = () => {
     if (!checkLoggedIn()) {
       navigate('/login');
     } else {
-      // Set timeout untuk melakukan logout otomatis setelah 30 menit (1800000 milidetik)
-      const logoutTimer = setTimeout(logout, 1800000); // 30 menit = 1800000 milidetik
-      return () => clearTimeout(logoutTimer); // Membersihkan timeout saat komponen dibongkar
-   
+      // Set timeout untuk melakukan logout otomatis setelah 30 menit (1.800.000 milidetik atau 1 menit 60.000 milidetik)
+     const logoutTimer = setTimeout(logout, 900000); // 30 menit = 1800000 milidetik
+     return () => clearTimeout(logoutTimer); // Membersihkan timeout saat komponen dibongkar
     }
-  }
+  },[]
 );
   const checkLoggedIn = () => {
     // Mendapatkan data pengguna dari localStorage
@@ -24,13 +24,6 @@ const DefaultLayout = () => {
     // Mengembalikan nilai dari properti 'logged' (true atau false)
     return userData?.logged || false;
   };
-
-  const logout = () => {
-    // Menghapus data pengguna dari localStorage
-    localStorage.removeItem('userData');
-    // Mengarahkan pengguna kembali ke halaman login
-    navigate('/login');
-  }
 
   return (
     <div>

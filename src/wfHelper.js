@@ -1,3 +1,4 @@
+
 export const API_BASE_URL = 'http://bencana_back.me/'
 
 export const parsys = async (name) => {
@@ -33,5 +34,11 @@ export const token = async () => {
     throw new Error('Failed to fetch token: ' + error.message)
   }
 }
+
+export const logout = () => {
+  // Menghapus data pengguna dari localStorage
+  localStorage.removeItem('userData');
+  window.location.reload();
+};
 
 

@@ -39,12 +39,7 @@ const sy_configFrm = () => {
           }
         }
       )
-
-      //console.log(response)
-      // Mengambil data dari localStorage
           const username = localStorage.getItem('userData');
-          // console.log(username); // Output: JohnDoe
-
       const responseData = await response.json()
       setData(responseData.data)
       setTotal(Math.ceil(responseData.total / limit))
@@ -70,8 +65,6 @@ const sy_configFrm = () => {
   const newFrm = () => {
     navigate('/backend/sy-config-frm')
   }
-
-  
 
   if (loading) {
     return (
