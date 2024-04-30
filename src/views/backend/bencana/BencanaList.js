@@ -14,7 +14,7 @@ import {
 import { DocsLink } from 'src/components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faSearch, faCaretUp, faCaretDown, faEraser } from '@fortawesome/free-solid-svg-icons'
-import { API_BASE_URL } from '../../../wfHelper'
+import { API_BASE_URL,userData } from '../../../wfHelper'
 
 const bencanaFrm = () => {
   const baseUrl = API_BASE_URL + 'm_bencana'
@@ -37,7 +37,12 @@ const bencanaFrm = () => {
       const page = currentPage
 
       const response = await fetch(
-        `${baseUrl}/getlist?q=${q}&page=${page}&limit=${limit}&sortKey=${sortKey}&sortOrder=${sortOrder}`,
+        `${baseUrl}/getlist?q=${q}&page=${page}&limit=${limit}&sortKey=${sortKey}&sortOrder=${sortOrder}`,{
+          method: 'GET',
+          headers: {
+            Authorization: userData().token,
+          }
+        }
       )
       const responseData = await response.json()
       setData(responseData.data)

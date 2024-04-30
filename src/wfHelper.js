@@ -41,4 +41,8 @@ export const logout = () => {
   window.location.reload();
 };
 
-
+export const userData = () => {
+  // Menghapus data pengguna dari localStorage
+  const data=JSON.parse(localStorage.getItem('userData'));
+  return data;
+};
