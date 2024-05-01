@@ -44,7 +44,12 @@ const bencanaFrm = () => {
       const page = currentPage
 
       const response = await fetch(
-        `${baseUrl}/getlist?q=${q}&page=${page}&limit=${limit}&sortKey=${sortKey}&sortOrder=${sortOrder}`,
+        `${baseUrl}/getlist?q=${q}&page=${page}&limit=${limit}&sortKey=${sortKey}&sortOrder=${sortOrder}`,{
+          method: 'GET',
+          headers: {
+            Authorization: userData().token,
+          }
+        }
       )
       const responseData = await response.json()
       setData(responseData.data)

@@ -15,7 +15,7 @@ import {
 } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
 import { cilLockLocked, cilUser } from '@coreui/icons';
-import { parsys, API_BASE_URL } from '../../../wfHelper';
+import { parsys, API_BASE_URL, logout } from '../../../wfHelper';
 import Swal from 'sweetalert2'
 
 const Login = () => {

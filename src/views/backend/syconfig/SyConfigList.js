@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CTable, CForm, CFormInput, CInputGroup, CButton, CSpinner } from '@coreui/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { API_BASE_URL } from '../../../wfHelper'
+import { API_BASE_URL,userData } from '../../../wfHelper'
 
 const sy_configFrm = () => {
   const [data, setData] = useState([])
@@ -35,16 +35,11 @@ const sy_configFrm = () => {
         {
           method: 'GET',
           headers: {
-            Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MX0.f0fkZGe81nLqpjaLlV8VLVZwTEuayLrKtoGKF6sR0gI',
+            Authorization: userData().token,
           }
         }
       )
-
-      //console.log(response)
-      // Mengambil data dari localStorage
           const username = localStorage.getItem('userData');
-          // console.log(username); // Output: JohnDoe
-
       const responseData = await response.json()
       setData(responseData.data)
       setTotal(Math.ceil(responseData.total / limit))
@@ -70,8 +65,6 @@ const sy_configFrm = () => {
   const newFrm = () => {
     navigate('/backend/sy-config-frm')
   }
-
-  
 
   if (loading) {
     return (
