@@ -1,4 +1,3 @@
-
 export const API_BASE_URL = 'http://bencana_back.me/'
 
 export const parsys = async (name) => {
@@ -37,12 +36,12 @@ export const token = async () => {
 
 export const logout = () => {
   // Menghapus data pengguna dari localStorage
-  localStorage.removeItem('userData');
-  window.location.reload();
-};
+  localStorage.removeItem('userData')
+  window.location.reload()
+}
 
 export const userData = () => {
   // Menghapus data pengguna dari localStorage
-  const data=JSON.parse(localStorage.getItem('userData'));
-  return data;
-};
+  const data = JSON.parse(localStorage.getItem('userData'))
+  return data
+}

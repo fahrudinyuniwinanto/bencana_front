@@ -11,6 +11,10 @@ import {
   CCard,
   CCardBody,
   CCardHeader,
+  CDropdown,
+  CDropdownItem,
+  CDropdownMenu,
+  CDropdownToggle,
 } from '@coreui/react'
 import { DocsLink } from 'src/components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -21,7 +25,7 @@ import {
   faCaretDown,
   faEraser,
 } from '@fortawesome/free-solid-svg-icons'
-import { API_BASE_URL } from '../../../wfHelper'
+import { API_BASE_URL, userData } from '../../../wfHelper'
 
 const bencanaFrm = () => {
   const baseUrl = API_BASE_URL + 'm_bencana'
@@ -32,25 +36,29 @@ const bencanaFrm = () => {
   const [total, setTotal] = useState(0)
   const [sortKey, setSortKey] = useState('')
   const [sortOrder, setSortOrder] = useState('desc')
-  const limit = 10
+  const [limit, setLimit] = useState(10)
 
   useEffect(() => {
     getList()
-  }, [searchQuery, currentPage, sortKey, sortOrder])
+  }, [searchQuery, currentPage, sortKey, sortOrder, limit])
 
   const getList = async () => {
     try {
       const q = searchQuery || ''
       const page = currentPage
 
-      const response = await fetch(
-        `${baseUrl}/getlist?q=${q}&page=${page}&limit=${limit}&sortKey=${sortKey}&sortOrder=${sortOrder}`,{
-          method: 'GET',
-          headers: {
-            Authorization: userData().token,
-          }
-        }
-      )
+      let url = `${baseUrl}/getlist?q=${q}&page=${page}&limit=${limit}&sortKey=${sortKey}&sortOrder=${sortOrder}`
+
+      // Jika opsi "Show All" dipilih, hapus parameter limit dari URL
+      if (limit === 'all') {
+        url = `${baseUrl}/getlist?q=${q}&page=${page}&sortKey=${sortKey}&sortOrder=${sortOrder}`
+      }
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          Authorization: userData().token,
+        },
+      })
       const responseData = await response.json()
       setData(responseData.data)
       setTotal(Math.ceil(responseData.total / limit))
@@ -68,6 +76,11 @@ const bencanaFrm = () => {
       setSortKey(key)
       setSortOrder('asc')
     }
+  }
+
+  // Fungsi handler untuk mengubah jumlah data per halaman
+  const handleLimitChange = (newLimit) => {
+    setLimit(newLimit)
   }
 
   const navigate = useNavigate()
@@ -93,7 +106,7 @@ const bencanaFrm = () => {
         <CCardBody>
           <div className="row">
             <div className="mb-2 col-md-3">
-              <CButton color="primary" className="btn-sm" onClick={newFrm}>
+              <CButton color="primary" onClick={newFrm}>
                 <FontAwesomeIcon icon={faPlus} /> Tambah Data
               </CButton>
             </div>
@@ -105,28 +118,51 @@ const bencanaFrm = () => {
                   placeholder="Cari..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="form-control form-control-sm"
+                  className="form-control"
                 />
-                <CButton color="primary" className="btn-sm" onClick={getList}>
+                <CButton color="primary" onClick={getList}>
                   <FontAwesomeIcon icon={faSearch} />
                 </CButton>
                 {searchQuery && ( // Menampilkan tombol "Clear" hanya jika searchQuery tidak kosong
-                  <CButton color="warning" className="btn-sm" onClick={() => setSearchQuery('')}>
+                  <CButton
+                    color="warning"
+                    title="Bersihkan pencarian"
+                    onClick={() => setSearchQuery('')}
+                  >
                     <FontAwesomeIcon icon={faEraser} />
                   </CButton>
                 )}
               </CInputGroup>
             </CForm>
             <div className="mb-2 col-md-2">
+              {/* Dropdown untuk mengatur jumlah data per halaman */}
+              <CDropdown className="d-inline-block">
+                <CDropdownToggle caret color="primary">
+                  Tampil {limit}
+                </CDropdownToggle>
+                <CDropdownMenu>
+                  {[10, 25, 100, 500, 1000, 'all'].map((option) => (
+                    <CDropdownItem key={option} onClick={() => handleLimitChange(option)}>
+                      {option === 'all' ? 'Semua' : option + ' data'}
+                    </CDropdownItem>
+                  ))}
+                </CDropdownMenu>
+              </CDropdown>
               <button
-                className="btn btn-success btn-sm"
+                className="btn btn-success"
                 onClick={() =>
                   exportToExcel(data, 'Data Bencana - ' + new Date().toLocaleDateString())
                 }
               >
-                <i className="fa fa-file-excel"></i> Export
+                <i className="fa fa-file-excel"></i> Excel
               </button>
             </div>
+          </div>
+          <div className="row">
+            <code>
+              Ditampilkan <strong>{limit}</strong> data{' '}
+              {searchQuery ? 'dengan kata kunci ' + searchQuery : ''}{' '}
+            </code>
           </div>
           <CTable hover responsive>
             <thead>
