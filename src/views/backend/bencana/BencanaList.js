@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { exportToExcel } from 'react-json-to-excel'
 import {
   CTable,
   CForm,
@@ -13,7 +14,13 @@ import {
 } from '@coreui/react'
 import { DocsLink } from 'src/components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus, faSearch, faCaretUp, faCaretDown, faEraser } from '@fortawesome/free-solid-svg-icons'
+import {
+  faPlus,
+  faSearch,
+  faCaretUp,
+  faCaretDown,
+  faEraser,
+} from '@fortawesome/free-solid-svg-icons'
 import { API_BASE_URL } from '../../../wfHelper'
 
 const bencanaFrm = () => {
@@ -24,7 +31,7 @@ const bencanaFrm = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [total, setTotal] = useState(0)
   const [sortKey, setSortKey] = useState('')
-  const [sortOrder, setSortOrder] = useState('asc')
+  const [sortOrder, setSortOrder] = useState('desc')
   const limit = 10
 
   useEffect(() => {
@@ -80,30 +87,41 @@ const bencanaFrm = () => {
         </CCardHeader>
         <CCardBody>
           <div className="row">
-            <div className="mb-2 col-md-5">
-              <CButton color="primary" onClick={newFrm}>
+            <div className="mb-2 col-md-3">
+              <CButton color="primary" className="btn-sm" onClick={newFrm}>
                 <FontAwesomeIcon icon={faPlus} /> Tambah Data
               </CButton>
             </div>
-            <div className="mb-2 col-md-3"></div>
-            <CForm className="mb-2 col-md-4">
+            <div className="mb-2 col-md-4"></div>
+            <CForm className="mb-2 col-md-3">
               <CInputGroup className="mb-3">
                 <CFormInput
                   type="text"
                   placeholder="Cari..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
+                  className="form-control form-control-sm"
                 />
-                <CButton color="primary" onClick={getList}>
+                <CButton color="primary" className="btn-sm" onClick={getList}>
                   <FontAwesomeIcon icon={faSearch} />
                 </CButton>
                 {searchQuery && ( // Menampilkan tombol "Clear" hanya jika searchQuery tidak kosong
-                  <CButton color="warning" onClick={() => setSearchQuery('')}>
+                  <CButton color="warning" className="btn-sm" onClick={() => setSearchQuery('')}>
                     <FontAwesomeIcon icon={faEraser} />
                   </CButton>
                 )}
               </CInputGroup>
             </CForm>
+            <div className="mb-2 col-md-2">
+              <button
+                className="btn btn-success btn-sm"
+                onClick={() =>
+                  exportToExcel(data, 'Data Bencana - ' + new Date().toLocaleDateString())
+                }
+              >
+                <i className="fa fa-file-excel"></i> Export
+              </button>
+            </div>
           </div>
           <CTable hover responsive>
             <thead>

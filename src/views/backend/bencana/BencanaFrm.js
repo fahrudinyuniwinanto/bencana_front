@@ -218,7 +218,6 @@ const BencanaFrm = () => {
                   <img
                     className="img-thumbnail"
                     src={filePreviewUpdate}
-                    alt="Preview"
                     style={{ maxWidth: '80%', height: 'auto' }}
                     hidden={fileName ? false : true}
                   />
@@ -229,11 +228,7 @@ const BencanaFrm = () => {
                         Nama: {selectedFile.name} | Tipe: {selectedFile.type} | Ukuran:{' '}
                         {(selectedFile.size / 1024).toFixed(2)} KB
                       </p>
-                      <img
-                        src={filePreview}
-                        alt="Preview"
-                        style={{ maxWidth: '80%', height: 'auto' }}
-                      />
+                      <img src={filePreview} style={{ maxWidth: '80%', height: 'auto' }} />
                     </div>
                   )}
                 </div>
