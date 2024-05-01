@@ -5,7 +5,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css'
 import { logout } from '../wfHelper'
 
 const DefaultLayout = () => {
-  
+
   const navigate = useNavigate()
   useEffect(() => {
     // Memeriksa login sebelum melakukan pengambilan data

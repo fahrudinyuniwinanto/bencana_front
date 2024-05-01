@@ -110,35 +110,37 @@ const bencanaFrm = () => {
                 <FontAwesomeIcon icon={faPlus} /> Tambah Data
               </CButton>
             </div>
-            <div className="mb-2 col-md-4"></div>
-            <CForm className="mb-2 col-md-3">
-              <CInputGroup className="mb-3">
-                <CFormInput
-                  type="text"
-                  placeholder="Cari..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="form-control"
-                />
-                <CButton color="primary" onClick={getList}>
-                  <FontAwesomeIcon icon={faSearch} />
-                </CButton>
-                {searchQuery && ( // Menampilkan tombol "Clear" hanya jika searchQuery tidak kosong
-                  <CButton
-                    color="warning"
-                    title="Bersihkan pencarian"
-                    onClick={() => setSearchQuery('')}
-                  >
-                    <FontAwesomeIcon icon={faEraser} />
+            <div className="mb-2 col-md-3"></div>
+            <div className="mb-2 col-md-3">
+              <CForm>
+                <CInputGroup className="mb-3">
+                  <CFormInput
+                    type="text"
+                    placeholder="Cari..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="form-control"
+                  />
+                  <CButton color="primary" onClick={getList}>
+                    <FontAwesomeIcon icon={faSearch} />
                   </CButton>
-                )}
-              </CInputGroup>
-            </CForm>
-            <div className="mb-2 col-md-2">
+                  {searchQuery && ( // Menampilkan tombol "Clear" hanya jika searchQuery tidak kosong
+                    <CButton
+                      color="warning"
+                      title="Bersihkan pencarian"
+                      onClick={() => setSearchQuery('')}
+                    >
+                      <FontAwesomeIcon icon={faEraser} />
+                    </CButton>
+                  )}
+                </CInputGroup>
+              </CForm>
+            </div>
+            <div className="mb-2 col-md-3">
               {/* Dropdown untuk mengatur jumlah data per halaman */}
               <CDropdown className="d-inline-block">
                 <CDropdownToggle caret color="primary">
-                  Tampil {limit}
+                  <i className="fa fa-list"></i> Tampil {limit}
                 </CDropdownToggle>
                 <CDropdownMenu>
                   {[10, 25, 100, 500, 1000, 'all'].map((option) => (
@@ -147,7 +149,7 @@ const bencanaFrm = () => {
                     </CDropdownItem>
                   ))}
                 </CDropdownMenu>
-              </CDropdown>
+              </CDropdown>{' '}
               <button
                 className="btn btn-success"
                 onClick={() =>

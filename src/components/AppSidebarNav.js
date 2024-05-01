@@ -31,10 +31,15 @@ export const AppSidebarNav = ({ items }) => {
   const navItem = (item, index, indent = false) => {
     const { component, name, badge, icon, ...rest } = item
     const Component = component
+    const isActive = rest.to ? rest.to === window.location.pathname : false
     return (
       <Component as="div" key={index}>
         {rest.to || rest.href ? (
-          <CNavLink {...(rest.to && { as: NavLink })} {...rest}>
+          <CNavLink
+            {...(rest.to && { as: NavLink })}
+            {...rest}
+            active={isActive ? true : undefined}
+          >
             {navLink(name, icon, badge, indent)}
           </CNavLink>
         ) : (

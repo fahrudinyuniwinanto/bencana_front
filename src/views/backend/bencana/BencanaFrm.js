@@ -15,7 +15,7 @@ import {
 import { DocsLink } from 'src/components'
 import { Dropzone, FileMosaic } from '@dropzone-ui/react'
 import Swal from 'sweetalert2'
-import { API_BASE_URL,userData } from '../../../wfHelper'
+import { API_BASE_URL, userData } from '../../../wfHelper'
 import Select from 'react-select'
 
 const BencanaFrm = () => {
@@ -41,11 +41,12 @@ const BencanaFrm = () => {
 
   const fetchKlasifikasi = async () => {
     try {
-      const response = await fetch(`${baseUrl}/getArrKlasifikasi`,{
+      const response = await fetch(`${baseUrl}/getArrKlasifikasi`, {
         method: 'GET',
         headers: {
-        Authorization: userData().token,
-      }})
+          Authorization: userData().token,
+        },
+      })
       const data = await response.json()
       setKlasifikasiOptions(data)
     } catch (error) {
@@ -61,12 +62,13 @@ const BencanaFrm = () => {
     try {
       const formData = new FormData()
       formData.append('file', selectedFile)
-      const response = await fetch(`${baseUrl}/uploadFiles`, 
-      {
-         method: 'POST',
+      const response = await fetch(`${baseUrl}/uploadFiles`, {
+        method: 'POST',
         headers: {
-        Authorization: userData().token,
-      }, body: formData })
+          Authorization: userData().token,
+        },
+        body: formData,
+      })
       if (!response.ok) {
         throw new Error('Gagal mengunggah file')
       }
@@ -114,11 +116,12 @@ const BencanaFrm = () => {
   const read = async (id) => {
     try {
       console.log(id)
-      const response = await fetch(`${baseUrl}/read/${id}`,{
+      const response = await fetch(`${baseUrl}/read/${id}`, {
         method: 'GET',
         headers: {
-        Authorization: userData().token,
-      }})
+          Authorization: userData().token,
+        },
+      })
       if (!response.ok) {
         throw new Error('Gagal mengambil data')
       }
@@ -151,12 +154,12 @@ const BencanaFrm = () => {
 
       // Jika pengguna menekan tombol "Yes"
       if (result.isConfirmed) {
-        const response = await fetch(`${baseUrl}/del/${id}`,
-        {
+        const response = await fetch(`${baseUrl}/del/${id}`, {
           method: 'GET',
           headers: {
-          Authorization: userData().token,
-        }})
+            Authorization: userData().token,
+          },
+        })
         if (!response.ok) {
           throw new Error('Gagal menghapus data')
         }
@@ -196,10 +199,12 @@ const BencanaFrm = () => {
             <CForm onSubmit={save}>
               <div className="row">
                 <div className="col-md-6">
+                  <CFormLabel htmlFor="idMBencana">
+                    ID <code>Kosongkan jika buat baru</code>
+                  </CFormLabel>
                   <CFormInput
                     type="text"
                     id="idMBencana"
-                    label="ID"
                     value={idMBencana}
                     onChange={(e) => setIdMBencana(e.target.value)}
                     placeholder=""
