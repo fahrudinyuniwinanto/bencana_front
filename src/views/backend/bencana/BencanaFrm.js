@@ -83,7 +83,10 @@ const BencanaFrm = () => {
     e.preventDefault()
     try {
       const fileName = await sendFile()
-      console.log('File name:', fileName)
+      //console.log('File name:', fileName)
+      var url = id ? `${baseUrl}/update/${id}` : `${baseUrl}/save`
+
+      console.log(url)
       const data = {
         h: {
           id_m_bencana: idMBencana,
@@ -91,11 +94,9 @@ const BencanaFrm = () => {
           nama_bencana: namaBencana,
           file_name: fileName,
         },
-        f: {
-          crud: id ? 'u' : 'c',
-        },
       }
-      const response = await fetch(`${baseUrl}/save`, {
+
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           Authorization: userData().token,
@@ -113,7 +114,6 @@ const BencanaFrm = () => {
 
   const read = async (id) => {
     try {
-      console.log(id)
       const response = await fetch(`${baseUrl}/read/${id}`, {
         method: 'GET',
         headers: {
