@@ -40,6 +40,7 @@ const App = () => {
       >
         <Routes>
           <Route path="*" name="Home" element={<DefaultLayout />} />
+          <Route path="/login" name="Login" element={<Login />} />
         </Routes>
       </Suspense>
     </HashRouter>

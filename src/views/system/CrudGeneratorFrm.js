@@ -7,8 +7,8 @@ const CrudGeneratorPage = () => {
   }
   return (
     <>
-      <div className="alert alert-danger">Perhatian! Harus dilakukan dengan sangat cermat</div>
       <h2>CRUD Generator ReactJs (CoreUI versi 5.0.0) dan Codeigniter 3</h2>
+      <div className="alert alert-danger">Perhatian! Tindakan ini harus dilakukan dengan sangat cermat</div>
       <CForm onSubmit={save}>
         <div className="row">
           <div className="col-md-6">
