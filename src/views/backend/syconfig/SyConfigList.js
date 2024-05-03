@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CTable, CForm, CFormInput, CInputGroup, CButton, CSpinner } from '@coreui/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { API_BASE_URL,userData } from '../../../wfHelper'
+import { API_BASE_URL, userData } from '../../../wfHelper'
 
 const sy_configFrm = () => {
   const [data, setData] = useState([])
@@ -15,15 +15,15 @@ const sy_configFrm = () => {
   const limit = '10'
 
   useEffect(() => {
-      getList();
+    getList()
   }, [searchQuery, currentPage, sortKey, sortOrder])
-  
+
   const checkLoggedIn = () => {
     // Mendapatkan data pengguna dari localStorage
-    const userData = JSON.parse(localStorage.getItem('userData'));
+    const userData = JSON.parse(localStorage.getItem('userData'))
     // Mengembalikan nilai dari properti 'logged' (true atau false)
-    return userData?.logged || false;
-  };
+    return userData?.logged || false
+  }
 
   const getList = async () => {
     try {
@@ -36,10 +36,10 @@ const sy_configFrm = () => {
           method: 'GET',
           headers: {
             Authorization: userData().token,
-          }
-        }
+          },
+        },
       )
-          const username = localStorage.getItem('userData');
+      //const username = localStorage.getItem('userData');
       const responseData = await response.json()
       setData(responseData.data)
       setTotal(Math.ceil(responseData.total / limit))
@@ -82,7 +82,7 @@ const sy_configFrm = () => {
         <div className="mb-2 col-md-5">
           <CButton color="primary" onClick={newFrm}>
             <i className="fas fa-plus"></i> Tambah
-          </CButton> 
+          </CButton>
         </div>
         <div className="mb-2 col-md-3"></div>
         <CForm className="mb-2 col-md-4">
