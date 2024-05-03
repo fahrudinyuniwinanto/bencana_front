@@ -273,15 +273,15 @@ const BencanaFrm = () => {
                 <i className="fa fa-arrow-left"></i> Kembali
               </CButton>
               <button type="submit" className="btn btn-primary m-1">
-                <i className="fa fa-save"></i> Simpan
+                <i className="fa fa-save"></i> {id ? 'Edit' : 'Simpan'}
               </button>
+              <CButton color="info" className="m-1" onClick={prin} hidden={id ? false : true}>
+                <i className="fa fa-file-pdf"></i> PDF
+              </CButton>
               <CButton color="danger" className="m-1" onClick={del} hidden={id ? false : true}>
                 <i className="fa fa-trash"></i> Hapus
               </CButton>
-              {/* pdf */}
-              <CButton color="info" className="m-1" onClick={prin} hidden={id ? false : true}>
-                <i className="fa fa-print"></i> Cetak
-              </CButton>
+
             </CForm>
           </div>
         </CCardBody>
