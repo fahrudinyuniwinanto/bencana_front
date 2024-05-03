@@ -15,6 +15,7 @@ import { DocsLink } from 'src/components'
 import Swal from 'sweetalert2'
 import { API_BASE_URL, userData } from '../../../wfHelper'
 import Select from 'react-select'
+import BencanaPrin from './BencanaPrin'
 
 const BencanaFrm = () => {
   const tableName = 'm_bencana'
@@ -184,6 +185,16 @@ const BencanaFrm = () => {
     navigate('/backend/bencana-list')
   }
 
+  const prin = () => {
+    const dataPrin = {
+      idMBencana,
+      idMKlasifikasi,
+      namaBencana,
+      fileName,
+    }
+    BencanaPrin(dataPrin)
+  }
+
   return (
     <>
       <CCard className="mb-4">
@@ -266,6 +277,10 @@ const BencanaFrm = () => {
               </button>
               <CButton color="danger" className="m-1" onClick={del} hidden={id ? false : true}>
                 <i className="fa fa-trash"></i> Hapus
+              </CButton>
+              {/* pdf */}
+              <CButton color="info" className="m-1" onClick={prin} hidden={id ? false : true}>
+                <i className="fa fa-print"></i> Cetak
               </CButton>
             </CForm>
           </div>
