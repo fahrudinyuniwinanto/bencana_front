@@ -1,4 +1,5 @@
 import React from 'react'
+const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 // syconfig
 const SyConfigList = React.lazy(() => import('./views/backend/syconfig/SyConfigList'))
 const SyConfigFrm = React.lazy(() => import('./views/backend/syconfig/SyConfigFrm'))
@@ -9,6 +10,7 @@ const CrudGeneratorFrm = React.lazy(() => import('./views/system/CrudGeneratorFr
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
+  { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/backend/sy-config-list', name: 'SyConfig List', element: SyConfigList },
   { path: '/backend/sy-config-frm/:id', name: 'SyConfig Form', element: SyConfigFrm },
   { path: '/backend/bencana-list', name: 'Bencana List', element: BencanaList },

@@ -4,8 +4,15 @@ import { cilFactorySlash, cilBug } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
 const _nav = [
+  //dashboard
   {
     component: CNavItem,
+    name: 'Dashboard',
+    to: '/dashboard',
+    icon: <CIcon icon={cilFactorySlash} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavTitle,
     name: 'Master Data',
   },
   {
