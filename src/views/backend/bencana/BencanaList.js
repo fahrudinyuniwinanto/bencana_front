@@ -37,6 +37,7 @@ const bencanaFrm = () => {
   const [sortKey, setSortKey] = useState('')
   const [sortOrder, setSortOrder] = useState('desc')
   const [limit, setLimit] = useState(10)
+  const navigate = useNavigate()
 
   useEffect(() => {
     getList()
@@ -78,16 +79,6 @@ const bencanaFrm = () => {
     }
   }
 
-  // Fungsi handler untuk mengubah jumlah data per halaman
-  const handleLimitChange = (newLimit) => {
-    setLimit(newLimit)
-  }
-
-  const navigate = useNavigate()
-  const newFrm = () => {
-    navigate('/backend/bencana-frm')
-  }
-
   if (loading) {
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
@@ -106,7 +97,7 @@ const bencanaFrm = () => {
         <CCardBody>
           <div className="row">
             <div className="mb-2 col-md-3">
-              <CButton color="primary" onClick={newFrm}>
+              <CButton color="primary" onClick={() => navigate('/backend/bencana-frm')}>
                 <FontAwesomeIcon icon={faPlus} /> Tambah Data
               </CButton>
             </div>
@@ -144,7 +135,7 @@ const bencanaFrm = () => {
                 </CDropdownToggle>
                 <CDropdownMenu>
                   {[10, 25, 100, 500, 1000, 'all'].map((option) => (
-                    <CDropdownItem key={option} onClick={() => handleLimitChange(option)}>
+                    <CDropdownItem key={option} onClick={() => setLimit(option)}>
                       {option === 'all' ? 'Semua' : option + ' data'}
                     </CDropdownItem>
                   ))}

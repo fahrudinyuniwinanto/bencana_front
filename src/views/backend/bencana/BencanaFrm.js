@@ -5,7 +5,6 @@ import {
   CButton,
   CFormInput,
   CFormTextarea,
-  CFormSelect,
   CFormLabel,
   CInputGroup,
   CCard,
@@ -13,7 +12,6 @@ import {
   CCardHeader,
 } from '@coreui/react'
 import { DocsLink } from 'src/components'
-import { Dropzone, FileMosaic } from '@dropzone-ui/react'
 import Swal from 'sweetalert2'
 import { API_BASE_URL, userData } from '../../../wfHelper'
 import Select from 'react-select'

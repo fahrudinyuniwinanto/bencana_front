@@ -12,8 +12,10 @@ const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
   { path: '/backend/sy-config-list', name: 'SyConfig List', element: SyConfigList },
+  { path: '/backend/sy-config-frm', name: 'SyConfig Form', element: SyConfigFrm },
   { path: '/backend/sy-config-frm/:id', name: 'SyConfig Form', element: SyConfigFrm },
   { path: '/backend/bencana-list', name: 'Bencana List', element: BencanaList },
+  { path: '/backend/bencana-frm', name: 'Bencana Form', element: BencanaFrm },
   { path: '/backend/bencana-frm/:id', name: 'Bencana Form', element: BencanaFrm },
   { path: '/system/crud-generator', name: 'Crud Generator', element: CrudGeneratorFrm },
 ]
