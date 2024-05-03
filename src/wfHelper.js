@@ -45,3 +45,19 @@ export const userData = () => {
   const data = JSON.parse(localStorage.getItem('userData'))
   return data
 }
+
+// export const sfService = async (url, method, body) => {
+//   try {
+//     const response = await fetch(url, {
+//       method: method,
+//       headers: {
+//         Authorization: userData().token,
+//       },
+//       body: JSON.stringify(body),
+//     })
+//     return await response.json()
+//   } catch (error) {
+//     console.error(error)
+//     return false
+//   }
+// }
