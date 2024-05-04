@@ -1,87 +1,116 @@
-import { CForm } from '@coreui/react'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import {
+  CCard,
+  CCardBody,
+  CCardHeader,
+  CForm,
+  CFormLabel,
+  CTable,
+  CTableBody,
+  CTableHead,
+  CTableRow,
+  CTableHeaderCell,
+} from '@coreui/react'
+import Select from 'react-select'
+import { API_BASE_URL } from '../../wfHelper'
 
-const CrudGeneratorPage = () => {
-  const save = async (e) => {
-    console.log(e)
+const CrudComponent = () => {
+  const [databases, setDatabases] = useState([])
+  const [tables, setTables] = useState([])
+  const [fields, setFields] = useState([])
+  const [selectedDb, setSelectedDb] = useState('')
+  const [selectedTable, setSelectedTable] = useState('')
+  const [selectedPk, setSelectedPk] = useState('')
+  const baseUrl = API_BASE_URL + 'crud'
+
+  useEffect(() => {
+    getDatabases()
+  }, [])
+
+  const getDatabases = async () => {
+    try {
+      const response = await fetch(`${baseUrl}/getDbs`)
+      const data = await response.json()
+      setDatabases(data.databases)
+    } catch (error) {
+      console.error('Error fetching database:', error)
+    }
   }
+
+  const getTables = async () => {
+    try {
+      const response = await fetch(`${baseUrl}/getTables?db=${selectedDb}`)
+      const data = await response.json()
+      setTables(data.tables)
+    } catch (error) {
+      console.error('Error fetching tables:', error)
+    }
+  }
+
+  const getFields = async () => {
+    try {
+      const response = await fetch(`${baseUrl}/getFields?db=${selectedDb}&table=${selectedTable}`)
+      const data = await response.json()
+      setFields(data.fields)
+      setSelectedPk(data.pk)
+    } catch (error) {
+      console.error('Error fetching fields:', error)
+    }
+  }
+
+  const handleDbChange = (selectedOption) => {
+    setSelectedDb(selectedOption.value)
+    getTables()
+  }
+
+  const handleTableChange = (selectedOption) => {
+    setSelectedTable(selectedOption.value)
+    getFields()
+  }
+
   return (
     <>
-      <h2>CRUD Generator ReactJs (CoreUI versi 5.0.0) dan Codeigniter 3</h2>
-      <div className="alert alert-danger">Perhatian! Tindakan ini harus dilakukan dengan sangat cermat</div>
-      <CForm onSubmit={save}>
-        <div className="row">
-          <div className="col-md-6">
-            <div className="form-group">
-              <label htmlFor="crudName">Name</label>
-              <input
-                type="text"
-                className="form-control"
-                id="crudName"
-                name="crudName"
-                placeholder="Name"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="crudTable">Table</label>
-              <input
-                type="text"
-                className="form-control"
-                id="crudTable"
-                name="crudTable"
-                placeholder="Table"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="crudPrefix">Prefix</label>
-              <input
-                type="text"
-                className="form-control"
-                id="crudPrefix"
-                name="crudPrefix"
-                placeholder="Prefix"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="crudAuthor">Author</label>
-              <input
-                type="text"
-                className="form-control"
-                id="crudAuthor"
-                name="crudAuthor"
-                placeholder="Author"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="crudFolder">Folder</label>
-              <input
-                type="text"
-                className="form-control"
-                id="crudFolder"
-                name="crudFolder"
-                placeholder="Folder"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="crudDescription">Description</label>
-              <textarea
-                className="form-control"
-                id="crudDescription"
-                name="crudDescription"
-                rows="3"
-                required
-              ></textarea>
-            </div>
+      <CCard className="mb-4">
+        <CCardHeader>Generate CRUD</CCardHeader>
+        <CCardBody>
+          <div className="row">
+            <CFormLabel>Database</CFormLabel>
+            <Select
+              options={databases.map((db) => ({ value: db, label: db }))}
+              onChange={handleDbChange}
+            />
           </div>
-        </div>
-      </CForm>
+          <div className="row">
+            <CFormLabel>Table</CFormLabel>
+            <Select
+              options={tables.map((table) => ({ value: table, label: table }))}
+              onChange={handleTableChange}
+            />
+          </div>
+          <div className="row">
+            <CTable>
+              <CTableHead>
+                <CTableRow>
+                  <CTableHeaderCell scope="col">Column Name</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Caption</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Element</CTableHeaderCell>
+                </CTableRow>
+              </CTableHead>
+              <CTableBody>
+                {fields.map((field, index) => (
+                  <tr key={index}>
+                    <td>{field.COLUMN_NAME}</td>
+                    <td>{field.CAPTION}</td>
+                    <td>{field.ELEMENT}</td>
+                  </tr>
+                ))}
+              </CTableBody>
+            </CTable>
+          </div>
+        </CCardBody>
+      </CCard>
     </>
   )
 }
 
-export default CrudGeneratorPage
+export default CrudComponent

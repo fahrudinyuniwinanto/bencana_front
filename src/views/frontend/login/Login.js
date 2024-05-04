@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate,Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
 import {
   CButton,
   CCard,
@@ -12,46 +12,46 @@ import {
   CInputGroup,
   CInputGroupText,
   CRow,
-} from '@coreui/react';
-import CIcon from '@coreui/icons-react';
-import { cilLockLocked, cilUser } from '@coreui/icons';
-import { parsys, API_BASE_URL, logout } from '../../../wfHelper';
+} from '@coreui/react'
+import CIcon from '@coreui/icons-react'
+import { cilLockLocked, cilUser } from '@coreui/icons'
+import { parsys, API_BASE_URL, logout } from '../../../wfHelper'
 import Swal from 'sweetalert2'
 
 const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [tokenAwal, setTokenAwal] = useState('');
-  const [appName, setAppName] = useState('');
-  const [appDesc, setAppDesc] = useState('');
-  const navigate = useNavigate();
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [tokenAwal, setTokenAwal] = useState('')
+  const [appName, setAppName] = useState('')
+  const [appDesc, setAppDesc] = useState('')
+  const navigate = useNavigate()
 
   // if (isLoggedIn) {
   //   navigate('/dashboard'); // Arahkan ke halaman dashboard jika login berhasil
   // }
 
   useEffect(() => {
-    getToken();
-    fetchParsys();
-  }, [tokenAwal]);
+    getToken()
+    fetchParsys()
+  }, [tokenAwal])
 
   const fetchParsys = async () => {
     try {
-      const name = await parsys('APP_NAME');
-      const desc = await parsys('APP_DESC');
-      setAppName(name);
-      setAppDesc(desc);
+      const name = await parsys('APP_NAME')
+      const desc = await parsys('APP_DESC')
+      setAppName(name)
+      setAppDesc(desc)
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
   }
 
   const handleUsernameChange = (e) => {
-    setUsername(e.target.value);
+    setUsername(e.target.value)
   }
 
   const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
+    setPassword(e.target.value)
   }
 
   const getToken = async () => {
@@ -61,17 +61,17 @@ const Login = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-      });
+      })
 
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error('Network response was not ok')
       }
 
-      const data = await response.json();
-      setTokenAwal(data.token);
+      const data = await response.json()
+      setTokenAwal(data.token)
     } catch (error) {
-      console.error('Error fetching token:', error.message);
-      throw new Error('Failed to fetch token: ' + error.message);
+      console.error('Error fetching token:', error.message)
+      throw new Error('Failed to fetch token: ' + error.message)
     }
   }
 
@@ -86,25 +86,23 @@ const Login = () => {
       })
         .then(async (response) => {
           if (!response.ok) {
-            throw new Error('Login failed');
+            throw new Error('Login failed')
           }
 
-          const data = await response.json();
+          const data = await response.json()
           // Simpan data login ke local storage
-          localStorage.setItem('userData', JSON.stringify(data));   
+          localStorage.setItem('userData', JSON.stringify(data))
           navigate('/backend/sy-config-list')
-          
-        
         })
         .catch((error) => {
           //console.error('Login error:', error.message);
           // Tampilkan pesan kesalahan kepada pengguna
           Swal.fire({
-          icon: 'error',
-          title: 'Gagal',
-          text: 'Username atau Password anda salah!',
+            icon: 'error',
+            title: 'Gagal',
+            text: 'Username atau Password anda salah!',
+          })
         })
-        });
     } else {
       // console.error('Username and password are required');
       Swal.fire({
@@ -115,8 +113,6 @@ const Login = () => {
     }
   }
 
-  
-  
   return (
     <div className="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
@@ -187,4 +183,4 @@ const Login = () => {
   )
 }
 
-export default Login;
+export default Login

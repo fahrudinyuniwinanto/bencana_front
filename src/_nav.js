@@ -23,12 +23,18 @@ const _nav = [
   },
   {
     component: CNavTitle,
-    name: 'Pengaturan',
+    name: 'SISTEM',
   },
   {
     component: CNavItem,
     name: 'Sys Config',
     to: '/backend/sy-config-list',
+    icon: <CIcon icon={cilBug} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'CRUD Generator',
+    to: '/system/crud-generator',
     icon: <CIcon icon={cilBug} customClassName="nav-icon" />,
   },
 ]

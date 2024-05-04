@@ -33,7 +33,7 @@ const BencanaFrm = () => {
   const [filePreviewUpdate, setFilePreviewUpdate] = useState(null)
   useEffect(() => {
     if (id) {
-      handleRead(id)
+      read(id)
     }
     fetchKlasifikasi()
   }, [])
@@ -80,10 +80,11 @@ const BencanaFrm = () => {
     }
   }
 
-  const handleSave = async (e) => {
+  const save = async (e) => {
     e.preventDefault()
     try {
       const fileName = await sendFile()
+      //console.log('File name:', fileName)
       var url = id ? `${baseUrl}/update/${id}` : `${baseUrl}/save`
 
       console.log(url)
@@ -112,7 +113,7 @@ const BencanaFrm = () => {
     }
   }
 
-  const handleRead = async (id) => {
+  const read = async (id) => {
     try {
       const response = await fetch(`${baseUrl}/read/${id}`, {
         method: 'GET',
@@ -136,7 +137,7 @@ const BencanaFrm = () => {
     }
   }
 
-  const handleDelete = async () => {
+  const del = async () => {
     try {
       // Tampilkan SweetAlert konfirmasi sebelum menghapus
       const result = await Swal.fire({
@@ -180,11 +181,11 @@ const BencanaFrm = () => {
       })
     }
   }
-  const handleBack = () => {
+  const goBack = () => {
     navigate('/backend/bencana-list')
   }
 
-  const handlePrin = () => {
+  const prin = () => {
     const dataPrin = {
       idMBencana,
       idMKlasifikasi,
@@ -204,7 +205,7 @@ const BencanaFrm = () => {
         <CCardBody>
           <div className="row">
             <div className="mb-2 col-md-5"></div>
-            <CForm onSubmit={handleSave}>
+            <CForm onSubmit={save}>
               <div className="row">
                 <div className="col-md-6">
                   <CFormLabel htmlFor="idMBencana">
@@ -243,7 +244,7 @@ const BencanaFrm = () => {
                   </CInputGroup>
                   {fileName && (
                     <>
-                      filename: <code>{fileName}</code>{' '}
+                      Nama: {fileName}{' '}
                       <a href={filePreviewUpdate} download>
                         Download
                       </a>
@@ -252,39 +253,35 @@ const BencanaFrm = () => {
                   <img
                     className="img-thumbnail"
                     src={filePreviewUpdate}
-                    style={{ maxWidth: '50%', height: 'auto' }}
+                    style={{ maxWidth: '80%', height: 'auto' }}
                     hidden={fileName ? false : true}
                   />
                   {isFileSelected && (
                     <div>
                       <h3>File Dipilih:</h3>
                       <p>
-                        filename: <code>{selectedFile.name}</code> | Tipe: {selectedFile.type} |
-                        Ukuran: {(selectedFile.size / 1024).toFixed(2)} KB
+                        Nama: {selectedFile.name} | Tipe: {selectedFile.type} | Ukuran:{' '}
+                        {(selectedFile.size / 1024).toFixed(2)} KB
                       </p>
-                      <img src={filePreview} style={{ maxWidth: '50%', height: 'auto' }} />
+                      <img src={filePreview} style={{ maxWidth: '80%', height: 'auto' }} />
                     </div>
                   )}
                 </div>
               </div>
               <br />
-              <CButton className="m-1" color="secondary" onClick={handleBack}>
+              <CButton className="m-1" color="secondary" onClick={goBack}>
                 <i className="fa fa-arrow-left"></i> Kembali
               </CButton>
               <button type="submit" className="btn btn-primary m-1">
-                <i className="fa fa-save"></i> Simpan
+                <i className="fa fa-save"></i> {id ? 'Edit' : 'Simpan'}
               </button>
-              <CButton color="info" className="m-1" onClick={handlePrin} hidden={id ? false : true}>
+              <CButton color="info" className="m-1" onClick={prin} hidden={id ? false : true}>
                 <i className="fa fa-file-pdf"></i> PDF
               </CButton>
-              <CButton
-                color="danger"
-                className="m-1"
-                onClick={handleDelete}
-                hidden={id ? false : true}
-              >
+              <CButton color="danger" className="m-1" onClick={del} hidden={id ? false : true}>
                 <i className="fa fa-trash"></i> Hapus
               </CButton>
+
             </CForm>
           </div>
         </CCardBody>
